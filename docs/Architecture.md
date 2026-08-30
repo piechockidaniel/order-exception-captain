@@ -1,23 +1,40 @@
 # Architecture
 
-```text
-sample-store event / carrier feed
-             |
-             v
-  deterministic delivery policy
-             |
-             +-- normal order -> no incident
-             |
-             v
-      fixed three-step sequence
-  evidence -> resolution explanation -> customer-message draft
-             |
-             v
-      approval-gated action draft
-             |
-             v
-       named human operator
+```mermaid
+flowchart TD
+    A[Read-only order snapshot or manual scan] --> B{Deterministic delivery policy}
+    B -->|Normal order| C[No incident]
+    B -->|Stalled, lost, or failed delivery| D[Fixed specialist sequence]
+    D --> E[Evidence explanation]
+    E --> F[Resolution explanation]
+    F --> G[Customer-message draft]
+    G --> H[Approval-gated action draft]
+    H --> I{Named human decision}
+    I -->|Reject| J[Auditable local rejection]
+    I -->|Approve| K[Dry-run handoff only]
+    K --> L[No external request]
+    B --> M[(SQLite incidents and audit trail)]
+    I --> M
+    A --> N[Privacy-safe scan activity]
+    N --> M
+
+    subgraph Controlled AI assistance
+      D
+      E
+      F
+      G
+    end
+
+    subgraph Guardrails
+      O[Model cannot route, approve, or trigger a side effect]
+      P[Non-local access requires operator token]
+    end
 ```
+
+The diagram is intentional: the deterministic coordinator controls branching,
+ordering, idempotency, and approval gates. Strands specialists may improve the
+three bounded draft steps, but their output cannot choose a route or invoke an
+external adapter.
 
 ## Local operator workflow
 

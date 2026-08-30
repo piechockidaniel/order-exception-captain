@@ -23,7 +23,7 @@ customer-message draft; and waits for a named human before any external action.
 | 4. Operator workflow | complete | Local dashboard passed a real browser approve/reject walkthrough, has PII minimisation/redaction, and includes a repeatable operator guide. |
 | 5. Safe integration | in progress | Browser-verified, approval-gated dry-run adapter generates one auditable handoff preview with no network client, credentials, or external side effect; the distributable wheel includes the operator dashboard. A real provider selection remains an explicit decision gate. |
 | 6. Production readiness | in progress | Read-only file-snapshot ingestion, scheduled scan command, a privacy-safe activity feed, token-gated non-local access, verified SQLite backups, and a loopback-only container template preserve the manual API fallback. 30 tests, wheel build, Compose validation, and a disposable container health check pass. The hosting, telemetry, retention owner, and restore cadence still need an operating decision. |
-| 7. Submission evidence | not started | Public repository, README, architecture diagram, deployed demo, and a <=5-minute video showing the end-to-end flow. |
+| 7. Submission evidence | in progress | README, MIT license, architecture diagram, five-minute demo script, and a submission checklist are ready. Public visibility, authorised live Strands proof, public video, Builder ID, and optional deployment remain. |
 
 ## Active slice — safe integration
 
@@ -45,6 +45,14 @@ customer-message draft; and waits for a named human before any external action.
 ### Deferred live Strands decision
 
 - [ ] Select a model and a spend boundary, then explicitly authorise the first paid smoke invocation.
+
+### Active submission-evidence tasks
+
+- [x] Produce a repository-native architecture diagram and five-minute demo script.
+- [x] Track every required submission item and distinguish finished evidence from external gates.
+- [ ] Authorise and capture one live synthetic Strands trace with a selected model and spend boundary.
+- [ ] Confirm publication permission, make the repository publicly verifiable, and record a public video.
+- [ ] Register the final project with AWS Builder ID and submit before 2026-09-14 17:00 PDT.
 
 ### Acceptance criteria
 
