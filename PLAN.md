@@ -22,7 +22,8 @@ customer-message draft; and waits for a named human before any external action.
 | 3. Live Strands proof | in progress | Explicit OpenAI provider configuration, three bounded specialists, a preflight record, an opt-in smoke command, and sixteen passing offline tests; awaiting a user-selected model and cost boundary for the first paid invocation. |
 | 4. Operator workflow | complete | Local dashboard passed a real browser approve/reject walkthrough, has PII minimisation/redaction, and includes a repeatable operator guide. |
 | 5. Safe integration | in progress | Browser-verified, approval-gated dry-run adapter generates one auditable handoff preview with no network client, credentials, or external side effect; the distributable wheel includes the operator dashboard. A real provider selection remains an explicit decision gate. |
-| 6. Submission evidence | not started | Public repository, README, architecture diagram, deployed demo, and a <=5-minute video showing the end-to-end flow. |
+| 6. Production readiness | not started | Read-only scheduled ingestion, authenticated operator access, failure visibility, and a documented retention/rollback posture before real-store use. |
+| 7. Submission evidence | not started | Public repository, README, architecture diagram, deployed demo, and a <=5-minute video showing the end-to-end flow. |
 
 ## Active slice — safe integration
 
@@ -35,6 +36,8 @@ customer-message draft; and waits for a named human before any external action.
 - [x] Fix the approval-dialog field-visibility regression and recheck it in a browser.
 - [x] Build a distributable wheel and verify it includes the operator dashboard assets.
 - [ ] Choose one real carrier or ecommerce adapter and obtain explicit authorisation before any non-dry-run implementation.
+- [ ] Add a read-only scheduled ingestion path with a manual scan fallback; do not let it trigger external writes.
+- [ ] Add authenticated operator access and basic failure/activity visibility before exposing a non-local instance.
 
 ### Deferred live Strands decision
 
