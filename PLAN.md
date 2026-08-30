@@ -18,22 +18,31 @@ customer-message draft; and waits for a named human before any external action.
 | Milestone | Status | Evidence / exit condition |
 |---|---|---|
 | 1. Foundation | complete | Clean Python repository, MIT license, deterministic policy, demo data, approval gate, and five passing tests. |
-| 2. Service and persistence | in progress | HTTP API, SQLite incident/audit storage, idempotent scheduled scan, and API-level tests. |
-| 3. Live Strands proof | next | Run three bounded Strands specialists against configured AWS Bedrock access; retain the fixed coordinator order in the trace. |
+| 2. Service and persistence | complete | HTTP API, SQLite incident/audit storage, idempotent scan, nine passing tests, and a local server smoke test. |
+| 3. Live Strands proof | in progress | Explicit OpenAI provider configuration, three bounded specialists, a preflight record, and an opt-in smoke command; awaiting a user-selected model and cost boundary for the first paid invocation. |
 | 4. Operator workflow | not started | Dashboard lets an operator inspect evidence, approve/reject a draft, and see an immutable audit record. |
 | 5. Safe integration | not started | One external adapter starts in dry-run; an approved action is required before any actual side effect. |
 | 6. Submission evidence | not started | Public repository, README, architecture diagram, deployed demo, and a <=5-minute video showing the end-to-end flow. |
 
-## Active slice — service and persistence
+## Active slice — live Strands proof
 
 ### Deliverables
 
-- [ ] Define an incident repository interface and a SQLite implementation.
-- [ ] Persist incidents, specialist drafts, approvals, and audit events.
-- [ ] Add a `POST /scans` endpoint for controlled demo triggering.
-- [ ] Add `GET /incidents` and `POST /incidents/{id}/approve` endpoints.
-- [ ] Make repeated scans idempotent by deterministic incident ID.
-- [ ] Cover normal, stalled, lost, failed-delivery, duplicate-scan, and approval paths with API tests.
+- [x] Define an incident repository interface and a SQLite implementation.
+- [x] Persist incidents, specialist drafts, approvals, and audit events.
+- [x] Add a `POST /scans` endpoint for controlled demo triggering.
+- [x] Add `GET /incidents` and `POST /incidents/{id}/approve` endpoints.
+- [x] Make repeated scans idempotent by deterministic incident ID.
+- [x] Cover normal, stalled, lost, failed-delivery, duplicate-scan, and approval paths with API tests.
+
+### Live Strands deliverables
+
+- [x] Add explicit, validated provider configuration; no credentials in files.
+- [x] Keep the deterministic coordinator as the only caller deciding role order.
+- [x] Make the selected provider available to all three bounded specialists.
+- [x] Add a credential-free configuration test and a separately invoked live smoke command.
+- [x] Record the model/provider, input, trace, and cost boundary before a paid invocation.
+- [ ] Select a model and a spend boundary, then explicitly authorise the first paid smoke invocation.
 
 ### Acceptance criteria
 
@@ -41,6 +50,7 @@ customer-message draft; and waits for a named human before any external action.
 - An approval records operator identity and timestamp.
 - The API never performs an external action; it stores drafts only.
 - The offline test suite stays independent of cloud model credentials.
+- A live smoke test runs only after the selected provider and cost boundary are recorded.
 
 ## Architectural decisions that must remain true
 

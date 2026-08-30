@@ -10,7 +10,7 @@ dependencies = [
     "email-validator>=2.2,<3",
     "fastapi>=0.115,<1",
     "pydantic>=2.9,<3",
-    "strands-agents>=1.0,<2",
+    "strands-agents[openai]>=1.0,<2",
     "uvicorn>=0.32,<1",
 ]
 
@@ -20,6 +20,7 @@ dev = ["pytest>=8.3,<9"]
 [project.scripts]
 order-exception-captain = "order_exception_captain.app:main"
 order-exception-captain-api = "order_exception_captain.api:main"
+order-exception-captain-live = "order_exception_captain.live_demo:main"
 
 [build-system]
 requires = ["hatchling>=1.26"]

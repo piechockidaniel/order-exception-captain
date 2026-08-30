@@ -7,7 +7,11 @@ an LLM authority over routing or approvals.
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 from strands import Agent, tool
+
+from .live_configuration import OpenAIProviderConfiguration, build_openai_model
 
 
 @tool
@@ -22,25 +26,34 @@ def describe_delivery_evidence(order_id: str, carrier_status: str, hours_without
 class StrandsSpecialistRunner:
     """Executes fixed-role Strands agents one at a time when model access is configured."""
 
-    def __init__(self) -> None:
+    def __init__(self, model_factory: Callable[[], object]) -> None:
         self._agents = {
             "evidence": Agent(
                 name="delivery_evidence_specialist",
                 description="Extracts factual delivery evidence without prescribing outcomes.",
                 system_prompt="Return only factual evidence. Never recommend refunds, replacements, or external actions.",
                 tools=[describe_delivery_evidence],
+                model=model_factory(),
             ),
             "resolution": Agent(
                 name="delivery_resolution_explainer",
                 description="Explains a preselected delivery policy result without changing it.",
                 system_prompt="Explain only the supplied resolution. You may not change, extend, or approve it.",
+                model=model_factory(),
             ),
             "communications": Agent(
                 name="customer_message_drafter",
                 description="Drafts empathetic customer updates for operator review.",
                 system_prompt="Draft a concise customer update. Do not promise compensation, replacement, or a delivery date.",
+                model=model_factory(),
             ),
         }
+
+    @classmethod
+    def from_openai_configuration(
+        cls, configuration: OpenAIProviderConfiguration
+    ) -> "StrandsSpecialistRunner":
+        return cls(lambda: build_openai_model(configuration))
 
     def run(self, role: str, prompt: str) -> str:
         try:

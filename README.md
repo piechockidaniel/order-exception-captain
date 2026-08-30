@@ -34,8 +34,45 @@ uv run order-exception-captain --approve
 ```
 
 The initial command-line flow uses deterministic fixture specialists so it can
-be tested without cloud credentials. `strands_runtime.py` holds the live
-Strands specialists for the next delivery slice.
+be tested without cloud credentials. `strands_runtime.py` holds the bounded
+live Strands specialists; the coordinator still determines their fixed order.
+
+## Local API demo
+
+```powershell
+uv run order-exception-captain-api --database data/demo.sqlite3
+```
+
+`POST /scans` accepts synthetic order data, `GET /incidents` shows persisted
+drafts, and `POST /incidents/{id}/approve` records a named operator approval.
+The API is local by default and has no external write adapter.
+
+## Optional live Strands smoke test
+
+The live proof is an explicit, local-only opt-in. It uses the OpenAI provider
+for Strands, runs only against synthetic demo data, and has no external write
+adapter. Install dependencies first, then set these values in your local shell
+(not in a repository file):
+
+```powershell
+$env:OEC_MODEL_PROVIDER = "openai"
+$env:OEC_MODEL_ID = "<approved-model-id>"
+$env:OPENAI_API_KEY = "<local-api-key>"
+$env:OEC_MAX_TOKENS = "300"
+$env:OEC_COST_BOUNDARY = "Synthetic three-specialist smoke test; approved spend limit: <amount>"
+uv run order-exception-captain-live
+```
+
+The command above validates the configuration and makes **no** model call. To
+run the three bounded specialists, review the printed boundary and invoke:
+
+```powershell
+uv run order-exception-captain-live --allow-live-model-call
+```
+
+Before that invocation, the command writes a non-secret preflight record under
+`data/live-runs/` with the selected provider/model, synthetic input, fixed
+trace, and cost boundary. That folder is ignored by Git.
 
 ## Guardrails
 
