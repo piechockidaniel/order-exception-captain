@@ -1,0 +1,33 @@
+[project]
+name = "order-exception-captain"
+version = "0.1.0"
+description = "A deterministic, approval-gated Strands workflow for ecommerce delivery exceptions."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [{ name = "Order Exception Captain contributors" }]
+dependencies = [
+    "email-validator>=2.2,<3",
+    "fastapi>=0.115,<1",
+    "pydantic>=2.9,<3",
+    "strands-agents>=1.0,<2",
+    "uvicorn>=0.32,<1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3,<9"]
+
+[project.scripts]
+order-exception-captain = "order_exception_captain.app:main"
+order-exception-captain-api = "order_exception_captain.api:main"
+
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/order_exception_captain"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
