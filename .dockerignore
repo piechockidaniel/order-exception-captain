@@ -1,0 +1,11 @@
+.git/
+.idea/
+.venv/
+.playwright-cli/
+data/
+backups/
+dist/
+output/
+__pycache__/
+*.py[cod]
+.env

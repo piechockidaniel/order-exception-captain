@@ -22,7 +22,7 @@ customer-message draft; and waits for a named human before any external action.
 | 3. Live Strands proof | in progress | Explicit OpenAI provider configuration, three bounded specialists, a preflight record, an opt-in smoke command, and sixteen passing offline tests; awaiting a user-selected model and cost boundary for the first paid invocation. |
 | 4. Operator workflow | complete | Local dashboard passed a real browser approve/reject walkthrough, has PII minimisation/redaction, and includes a repeatable operator guide. |
 | 5. Safe integration | in progress | Browser-verified, approval-gated dry-run adapter generates one auditable handoff preview with no network client, credentials, or external side effect; the distributable wheel includes the operator dashboard. A real provider selection remains an explicit decision gate. |
-| 6. Production readiness | in progress | Read-only file-snapshot ingestion, scheduled scan command, a privacy-safe activity feed, and token-gated non-local access preserve the manual API fallback; 28 tests, a wheel build, and protected/unprotected browser walkthroughs pass. Deployment-ready observability and retention/rollback posture remain. |
+| 6. Production readiness | in progress | Read-only file-snapshot ingestion, scheduled scan command, a privacy-safe activity feed, token-gated non-local access, verified SQLite backups, and a loopback-only container template preserve the manual API fallback. 30 tests, wheel build, Compose validation, and a disposable container health check pass. The hosting, telemetry, retention owner, and restore cadence still need an operating decision. |
 | 7. Submission evidence | not started | Public repository, README, architecture diagram, deployed demo, and a <=5-minute video showing the end-to-end flow. |
 
 ## Active slice — safe integration
@@ -39,7 +39,8 @@ customer-message draft; and waits for a named human before any external action.
 - [x] Add a read-only scheduled ingestion path with a manual scan fallback; do not let it trigger external writes.
 - [x] Record privacy-safe scan successes and failures; show the latest result in the local dashboard and API.
 - [x] Require a token for non-local operator access and keep it only in dashboard memory.
-- [ ] Define deployment telemetry, incident retention, backup, and rollback procedures before connecting non-synthetic data.
+- [x] Add health checks, verified SQLite backup, and documented recovery procedure.
+- [ ] Select hosting, telemetry destination, retention owner, and restore-test cadence before connecting non-synthetic data.
 
 ### Deferred live Strands decision
 

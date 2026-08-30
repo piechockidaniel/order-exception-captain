@@ -1,0 +1,18 @@
+services:
+  order-exception-captain:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      OEC_OPERATOR_TOKEN: ${OEC_OPERATOR_TOKEN:?Set a 16+-character operator token in the host environment.}
+    volumes:
+      - order_exception_captain_data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; urlopen('http://127.0.0.1:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  order_exception_captain_data:

@@ -88,6 +88,13 @@ This is a minimal access boundary, not user identity: the named operator in an
 approval remains an auditable declaration. A real deployment should terminate
 TLS and place this service behind company SSO or an identity-aware proxy.
 
+## Deployment and recovery
+
+A loopback-only Docker Compose template, SQLite health check, verified backup
+command, retention guidance, and rollback procedure are in the
+[deployment guide](docs/Deployment.md). It does not provision infrastructure
+or connect an external system.
+
 ## Optional live Strands smoke test
 
 The live proof is an explicit, local-only opt-in. It uses the OpenAI provider

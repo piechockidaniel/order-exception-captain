@@ -7,5 +7,6 @@ dist/
 build/
 *.egg-info/
 data/
+backups/
 .playwright-cli/
 output/

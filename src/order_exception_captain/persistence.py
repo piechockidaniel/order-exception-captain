@@ -38,6 +38,9 @@ class IncidentRepository(Protocol):
     def list_scan_activity(self, limit: int = 20) -> list[ScanActivity]:
         """Return recent scan records, newest first."""
 
+    def check_storage_health(self) -> None:
+        """Raise the underlying SQLite error if the configured storage is unavailable."""
+
     def list_events(self, incident_id: str) -> list[AuditEvent]:
         """Return the ordered audit events for one incident."""
 
@@ -212,6 +215,10 @@ class SqliteIncidentRepository:
             )
             for row in rows
         ]
+
+    def check_storage_health(self) -> None:
+        with self._connect() as connection:
+            connection.execute("SELECT 1").fetchone()
 
     def list_events(self, incident_id: str) -> list[AuditEvent]:
         self.get_incident(incident_id)

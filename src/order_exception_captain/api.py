@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -67,6 +68,10 @@ def create_app(database_path: str | Path, operator_token: str | None = None) -> 
 
     @app.get("/health")
     def health() -> dict[str, str]:
+        try:
+            repository.check_storage_health()
+        except sqlite3.Error as error:
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Local storage is unavailable.") from error
         return {"status": "ok", "operator_access": "token_required" if operator_access.is_enabled else "local_open"}
 
     @app.post("/scans", response_model=ScanResult, status_code=status.HTTP_200_OK)
