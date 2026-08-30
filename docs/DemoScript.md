@@ -60,12 +60,13 @@ Mention that non-local binding requires an operator token, that the dashboard
 holds it only in memory, and that the deployment guide requires TLS and an
 identity-aware proxy before real data.
 
-## 4:25–5:00 — Strands and honest close
+## 4:25–5:00 — Strands, Bedrock, and honest close
 
 Show `strands_runtime.py` and the bounded evidence, resolution, and
-communications roles. For the final submission, run the separately authorised
-synthetic live smoke test and include its visible trace in this segment. Do not
-represent the offline template runner as a live model invocation.
+communications roles. Show the preflight record configured for Amazon Bedrock,
+then run the separately authorised synthetic live smoke test and include its
+visible trace in this segment. Do not represent the offline template runner as
+a live model invocation or imply that Bedrock selected a resolution.
 
 Close with: “Order Exception Captain narrows an ambiguous delivery problem into
 a repeatable, reviewable decision—without allowing an agent to silently send,

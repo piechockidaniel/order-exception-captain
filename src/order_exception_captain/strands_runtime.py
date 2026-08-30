@@ -11,7 +11,12 @@ from collections.abc import Callable
 
 from strands import Agent, tool
 
-from .live_configuration import OpenAIProviderConfiguration, build_openai_model
+from .live_configuration import (
+    BedrockProviderConfiguration,
+    LiveProviderConfiguration,
+    OpenAIProviderConfiguration,
+    build_live_model,
+)
 
 
 @tool
@@ -53,7 +58,19 @@ class StrandsSpecialistRunner:
     def from_openai_configuration(
         cls, configuration: OpenAIProviderConfiguration
     ) -> "StrandsSpecialistRunner":
-        return cls(lambda: build_openai_model(configuration))
+        return cls.from_live_configuration(configuration)
+
+    @classmethod
+    def from_bedrock_configuration(
+        cls, configuration: BedrockProviderConfiguration
+    ) -> "StrandsSpecialistRunner":
+        return cls.from_live_configuration(configuration)
+
+    @classmethod
+    def from_live_configuration(
+        cls, configuration: LiveProviderConfiguration
+    ) -> "StrandsSpecialistRunner":
+        return cls(lambda: build_live_model(configuration))
 
     def run(self, role: str, prompt: str) -> str:
         try:

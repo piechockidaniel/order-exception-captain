@@ -19,10 +19,10 @@ customer-message draft; and waits for a named human before any external action.
 |---|---|---|
 | 1. Foundation | complete | Clean Python repository, MIT license, deterministic policy, demo data, approval gate, and five passing tests. |
 | 2. Service and persistence | complete | HTTP API, SQLite incident/audit storage, idempotent scan, nine passing tests, and a local server smoke test. |
-| 3. Live Strands proof | in progress | Explicit OpenAI provider configuration, three bounded specialists, a preflight record, an opt-in smoke command, and sixteen passing offline tests; awaiting a user-selected model and cost boundary for the first paid invocation. |
+| 3. Live Strands proof | in progress | Explicit Bedrock and OpenAI provider configuration, three bounded specialists, a preflight record, and an opt-in smoke command; final evidence will use Bedrock after an AWS model, region, and spend boundary are selected. |
 | 4. Operator workflow | complete | Local dashboard passed a real browser approve/reject walkthrough, has PII minimisation/redaction, and includes a repeatable operator guide. |
 | 5. Safe integration | in progress | Browser-verified, approval-gated dry-run adapter generates one auditable handoff preview with no network client, credentials, or external side effect; the distributable wheel includes the operator dashboard. A real provider selection remains an explicit decision gate. |
-| 6. Production readiness | in progress | Read-only file-snapshot ingestion, scheduled scan command, a privacy-safe activity feed, token-gated non-local access, verified SQLite backups, and a loopback-only container template preserve the manual API fallback. 30 tests, wheel build, Compose validation, and a disposable container health check pass. The hosting, telemetry, retention owner, and restore cadence still need an operating decision. |
+| 6. Production readiness | in progress | Read-only file-snapshot ingestion, scheduled scan command, a privacy-safe activity feed, token-gated non-local access, verified SQLite backups, and a loopback-only container template preserve the manual API fallback. 37 tests, wheel build, Compose validation, and a disposable container health check pass. The hosting, telemetry, retention owner, and restore cadence still need an operating decision. |
 | 7. Submission evidence | in progress | README, MIT license, architecture diagram, five-minute demo script, and a submission checklist are ready. Public visibility, authorised live Strands proof, public video, Builder ID, and optional deployment remain. |
 
 ## Active slice — safe integration
@@ -42,15 +42,16 @@ customer-message draft; and waits for a named human before any external action.
 - [x] Add health checks, verified SQLite backup, and documented recovery procedure.
 - [ ] Select hosting, telemetry destination, retention owner, and restore-test cadence before connecting non-synthetic data.
 
-### Deferred live Strands decision
+### Deferred live Bedrock decision
 
-- [ ] Select a model and a spend boundary, then explicitly authorise the first paid smoke invocation.
+- [x] Add a native Amazon Bedrock Strands provider using the ambient AWS credential chain.
+- [ ] Select an AWS region, Bedrock model enabled for that account, and a spend boundary; then explicitly authorise the first paid smoke invocation.
 
 ### Active submission-evidence tasks
 
 - [x] Produce a repository-native architecture diagram and five-minute demo script.
 - [x] Track every required submission item and distinguish finished evidence from external gates.
-- [ ] Authorise and capture one live synthetic Strands trace with a selected model and spend boundary.
+- [ ] Authorise and capture one live synthetic Strands-on-Bedrock trace with a selected model, region, and spend boundary.
 - [ ] Confirm publication permission, make the repository publicly verifiable, and record a public video.
 - [ ] Register the final project with AWS Builder ID and submit before 2026-09-14 17:00 PDT.
 
@@ -77,6 +78,7 @@ customer-message draft; and waits for a named human before any external action.
 | The entry looks like a generic multi-agent platform. | Keep one delivery-exception workflow and demo it from trigger to approval. |
 | Live model behavior changes the deterministic route. | Test all routing before invoking specialists; persist model output as non-authoritative drafts. |
 | AWS/Bedrock setup delays the demo. | Preserve the deterministic local demo; add live Strands proof as an isolated milestone. |
+| A live Bedrock trace exceeds the intended spend. | Require a recorded human approval and a per-specialist output limit. This is not a hard dollar cap; configure an AWS budget or billing alert and keep the first run synthetic. |
 | A real-store integration creates customer or financial risk. | Start with a dry-run adapter and retain explicit approval as a hard gate. |
 | Scope overlaps Restock Room. | Do not add stock replenishment, supplier ordering, or purchasing. |
 | Submission repository is not publicly verifiable. | A GitHub remote exists, but anonymous lookup cannot verify its visibility. Confirm the intended repository and permission to publish before pushing this work or changing visibility. |

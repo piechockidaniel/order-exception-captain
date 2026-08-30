@@ -95,17 +95,18 @@ command, retention guidance, and rollback procedure are in the
 [deployment guide](docs/Deployment.md). It does not provision infrastructure
 or connect an external system.
 
-## Optional live Strands smoke test
+## Final Bedrock Strands proof
 
-The live proof is an explicit, local-only opt-in. It uses the OpenAI provider
-for Strands, runs only against synthetic demo data, and has no external write
-adapter. Install dependencies first, then set these values in your local shell
-(not in a repository file):
+The final proof path uses Amazon Bedrock through Strands. It runs only against
+synthetic demo data and has no external write adapter. Configure AWS credentials
+through your local AWS profile, role, or other standard credential chain—never
+in source control—then set the provider, an enabled model ID, region, and a
+human-approved cost boundary in your local shell:
 
 ```powershell
-$env:OEC_MODEL_PROVIDER = "openai"
-$env:OEC_MODEL_ID = "<approved-model-id>"
-$env:OPENAI_API_KEY = "<local-api-key>"
+$env:OEC_MODEL_PROVIDER = "bedrock"
+$env:OEC_MODEL_ID = "<Bedrock-model-enabled-for-this-account>"
+$env:AWS_REGION = "<enabled-model-region>"
 $env:OEC_MAX_TOKENS = "300"
 $env:OEC_COST_BOUNDARY = "Synthetic three-specialist smoke test; approved spend limit: <amount>"
 uv run order-exception-captain-live
@@ -119,8 +120,17 @@ uv run order-exception-captain-live --allow-live-model-call
 ```
 
 Before that invocation, the command writes a non-secret preflight record under
-`data/live-runs/` with the selected provider/model, synthetic input, fixed
-trace, and cost boundary. That folder is ignored by Git.
+`data/live-runs/` with the selected provider/model, region, synthetic input,
+fixed trace, and cost boundary. That folder is ignored by Git. The OpenAI
+provider remains available as an explicit alternative for non-final testing, but
+the final hackathon trace and video should use Bedrock.
+
+`OEC_COST_BOUNDARY` records a specific human approval; it is **not** an
+AWS-enforced dollar stop. The runner fixes the three specialist roles and caps
+generated output per specialist, but final charges also depend on input tokens
+and any tool follow-up. Set an AWS billing alert or budget separately, start
+with a small synthetic invocation, and review the preflight before using
+`--allow-live-model-call`.
 
 ## Guardrails
 

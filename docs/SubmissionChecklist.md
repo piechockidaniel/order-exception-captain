@@ -6,8 +6,8 @@ Track: **Professional Agents**. Current official deadline: **September 14,
 | Requirement | Status | Evidence or next action |
 |---|---|---|
 | New project created during submission period | complete | New repository; provenance is documented in the README. |
-| Strands Agents SDK incorporated | complete, live proof pending | Dependency and bounded runtime roles are in source. Record the authorised live synthetic run before the video. |
-| Works consistently as depicted | in progress | 30 automated tests, wheel, browser checks, and a disposable container health check pass; record the final video against the tagged code. |
+| Strands Agents SDK and Amazon Bedrock incorporated | complete, live proof pending | Dependency and bounded Bedrock runtime roles are in source. Record the authorised live synthetic run before the video. |
+| Works consistently as depicted | in progress | 37 automated tests, wheel, browser checks, and a disposable container health check pass; record the final video against the tagged code. |
 | Public repository with visible MIT/Apache license and README | blocked on publication approval | Remote exists with MIT license and README, but repository visibility has not been changed. |
 | Architecture diagram | complete | Mermaid diagram in `docs/Architecture.md`. |
 | Public video, maximum five minutes | ready to record | `docs/DemoScript.md`; upload to public YouTube or Vimeo after final live-proof run. |
@@ -18,8 +18,8 @@ Track: **Professional Agents**. Current official deadline: **September 14,
 ## Before submitting
 
 1. Re-run `uv run pytest` and capture the result.
-2. Run the authorised, synthetic Strands smoke invocation and save its
-   non-secret preflight/trace evidence.
+2. Run the authorised, synthetic Strands-on-Bedrock smoke invocation and save
+   its non-secret preflight/trace evidence.
 3. Record the video using the script; keep it under five minutes and publish it.
 4. Confirm permission to make the repository public, then verify anonymous
    access to the README and MIT license.

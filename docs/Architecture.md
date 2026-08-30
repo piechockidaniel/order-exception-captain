@@ -89,10 +89,13 @@ No agent is allowed to send a message, alter an order, issue a refund, or create
 a replacement. Those are future integration adapters that must require a named
 operator approval and produce an audit record.
 
-## Strands use
+## Strands and Bedrock use
 
 `strands_runtime.py` contains three role-specific Strands agents and an
 evidence tool. The live runner is deliberately separate from the demo runner,
 so the deterministic policy can be tested without a model credential. The
-production wiring will call the roles serially in the coordinator's prescribed
-order and retain their drafts with the incident record.
+final proof wiring can create a native `BedrockModel` using the ambient AWS
+credential chain, explicit region, and an account-enabled model ID. It calls the
+roles serially in the coordinator's prescribed order and retains their drafts
+with the incident record. No Bedrock agent can alter the policy route, approve a
+draft, or invoke an external order, carrier, or customer action.

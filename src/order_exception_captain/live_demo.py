@@ -8,20 +8,21 @@ from datetime import datetime, timezone
 from pathlib import Path
 from uuid import uuid4
 
-from .live_configuration import OpenAIProviderConfiguration
+from .live_configuration import LiveProviderConfiguration, load_live_configuration
 from .sample_data import demo_orders
 from .strands_runtime import StrandsSpecialistRunner
 from .workflow import DeterministicCoordinator
 
 
 def _write_preflight_record(
-    configuration: OpenAIProviderConfiguration, output_directory: Path
+    configuration: LiveProviderConfiguration, output_directory: Path
 ) -> Path:
     """Write non-secret run metadata before the process can invoke a paid model."""
     sample_order = demo_orders()[0]
     timestamp = datetime.now(timezone.utc)
+    run_id = str(uuid4())
     record = {
-        "run_id": str(uuid4()),
+        "run_id": run_id,
         "recorded_at": timestamp.isoformat(),
         "mode": "live_strands_smoke",
         "configuration": configuration.safe_summary(),
@@ -34,7 +35,9 @@ def _write_preflight_record(
         "external_write_adapter": "absent",
     }
     output_directory.mkdir(parents=True, exist_ok=True)
-    record_path = output_directory / f"preflight-{timestamp.strftime('%Y%m%dT%H%M%SZ')}.json"
+    record_path = output_directory / (
+        f"preflight-{timestamp.strftime('%Y%m%dT%H%M%SZ')}-{run_id}.json"
+    )
     record_path.write_text(json.dumps(record, indent=2), encoding="utf-8")
     return record_path
 
@@ -56,15 +59,23 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    configuration = OpenAIProviderConfiguration.from_environment()
-    print(json.dumps({"configuration": configuration.safe_summary()}, indent=2))
+    configuration = load_live_configuration()
+    preflight_path = _write_preflight_record(configuration, args.record_directory)
+    print(
+        json.dumps(
+            {
+                "configuration": configuration.safe_summary(),
+                "preflight_record": str(preflight_path),
+            },
+            indent=2,
+        )
+    )
     if not args.allow_live_model_call:
         print("No model call was made. Re-run with --allow-live-model-call after reviewing the boundary above.")
         return
 
-    preflight_path = _write_preflight_record(configuration, args.record_directory)
     coordinator = DeterministicCoordinator(
-        StrandsSpecialistRunner.from_openai_configuration(configuration)
+        StrandsSpecialistRunner.from_live_configuration(configuration)
     )
     incident = coordinator.triage(demo_orders()[0])
     print(
