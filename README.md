@@ -132,6 +132,10 @@ and any tool follow-up. Set an AWS billing alert or budget separately, start
 with a small synthetic invocation, and review the preflight before using
 `--allow-live-model-call`.
 
+The [Bedrock proof runbook](docs/BedrockProofRunbook.md) gives the exact
+safe-preflight, recording, and optional AgentCore-upgrade sequence for the
+final video.
+
 ## Guardrails
 
 - The language model cannot choose the workflow route or action type.

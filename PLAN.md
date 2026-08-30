@@ -52,6 +52,7 @@ customer-message draft; and waits for a named human before any external action.
 - [x] Produce a repository-native architecture diagram and five-minute demo script.
 - [x] Track every required submission item and distinguish finished evidence from external gates.
 - [ ] Authorise and capture one live synthetic Strands-on-Bedrock trace with a selected model, region, and spend boundary.
+- [ ] After that trace, decide whether an AgentCore deployment dry-run is justified as an optional technical-score upgrade; do not deploy without explicit approval.
 - [ ] Confirm publication permission, make the repository publicly verifiable, and record a public video.
 - [ ] Register the final project with AWS Builder ID and submit before 2026-09-14 17:00 PDT.
 
@@ -79,6 +80,7 @@ customer-message draft; and waits for a named human before any external action.
 | Live model behavior changes the deterministic route. | Test all routing before invoking specialists; persist model output as non-authoritative drafts. |
 | AWS/Bedrock setup delays the demo. | Preserve the deterministic local demo; add live Strands proof as an isolated milestone. |
 | A live Bedrock trace exceeds the intended spend. | Require a recorded human approval and a per-specialist output limit. This is not a hard dollar cap; configure an AWS budget or billing alert and keep the first run synthetic. |
+| AgentCore deployment expands the scope and AWS footprint. | First secure a successful local Bedrock trace. Treat AgentCore as a separately approved, optional score-strengthening deployment. |
 | A real-store integration creates customer or financial risk. | Start with a dry-run adapter and retain explicit approval as a hard gate. |
 | Scope overlaps Restock Room. | Do not add stock replenishment, supplier ordering, or purchasing. |
 | Submission repository is not publicly verifiable. | A GitHub remote exists, but anonymous lookup cannot verify its visibility. Confirm the intended repository and permission to publish before pushing this work or changing visibility. |

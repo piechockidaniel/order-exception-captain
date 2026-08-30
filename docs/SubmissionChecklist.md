@@ -20,8 +20,10 @@ Track: **Professional Agents**. Current official deadline: **September 14,
 1. Re-run `uv run pytest` and capture the result.
 2. Run the authorised, synthetic Strands-on-Bedrock smoke invocation and save
    its non-secret preflight/trace evidence.
-3. Record the video using the script; keep it under five minutes and publish it.
-4. Confirm permission to make the repository public, then verify anonymous
+3. Optionally run an AgentCore deployment dry-run, then seek explicit approval
+   before deploying it as a technical-score upgrade.
+4. Record the video using the script; keep it under five minutes and publish it.
+5. Confirm permission to make the repository public, then verify anonymous
    access to the README and MIT license.
 5. Complete Devpost fields in English, including the code URL, diagram, video,
    Builder ID, and testing instructions.
