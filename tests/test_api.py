@@ -68,6 +68,69 @@ def test_approval_updates_the_draft_and_creates_an_audit_event(tmp_path) -> None
     assert events.json()[1]["actor"] == "Demo Operator"
 
 
+def test_rejection_records_the_named_operator_and_reason(tmp_path) -> None:
+    client = make_client(tmp_path)
+    incident_id = "delivery-order-api-stalled"
+    client.post("/scans", json={"orders": [delivery_exception_order()]})
+
+    rejected = client.post(
+        f"/incidents/{incident_id}/reject",
+        json={"operator": "Demo Operator", "reason": "Carrier evidence needs a manual check."},
+    )
+    events = client.get(f"/incidents/{incident_id}/events")
+    later_approval = client.post(f"/incidents/{incident_id}/approve", json={"operator": "Demo Operator"})
+
+    assert rejected.status_code == 200
+    assert rejected.json()["status"] == "rejected"
+    assert rejected.json()["drafts"][0]["rejection_reason"] == "Carrier evidence needs a manual check."
+    assert [event["event_type"] for event in events.json()] == ["incident_detected", "incident_rejected"]
+    assert later_approval.status_code == 409
+
+
+def test_local_dashboard_loads_and_synthetic_demo_scan_is_idempotent(tmp_path) -> None:
+    client = make_client(tmp_path)
+
+    dashboard = client.get("/")
+    first_scan = client.post("/demo/scan")
+    second_scan = client.post("/demo/scan")
+
+    assert dashboard.status_code == 200
+    assert "Order Exception Captain" in dashboard.text
+    assert client.get("/assets/app.js").status_code == 200
+    assert first_scan.json()["new_incident_ids"] == [
+        "delivery-order-1042-stalled",
+        "delivery-order-1044-lost",
+    ]
+    assert second_scan.json()["existing_incident_ids"] == [
+        "delivery-order-1042-stalled",
+        "delivery-order-1044-lost",
+    ]
+
+
+def test_dry_run_requires_approval_and_records_only_one_non_network_handoff(tmp_path) -> None:
+    client = make_client(tmp_path)
+    incident_id = "delivery-order-api-stalled"
+    client.post("/scans", json={"orders": [delivery_exception_order()]})
+
+    blocked = client.post(f"/incidents/{incident_id}/dry-run", json={"operator": "Demo Operator"})
+    client.post(f"/incidents/{incident_id}/approve", json={"operator": "Demo Operator"})
+    prepared = client.post(f"/incidents/{incident_id}/dry-run", json={"operator": "Demo Operator"})
+    repeated = client.post(f"/incidents/{incident_id}/dry-run", json={"operator": "Demo Operator"})
+    events = client.get(f"/incidents/{incident_id}/events")
+
+    assert blocked.status_code == 409
+    assert prepared.status_code == 200
+    assert prepared.json()["external_request_sent"] is False
+    assert prepared.json()["already_prepared"] is False
+    assert "No customer, carrier, store, or payment request was sent." in prepared.json()["request_summary"]
+    assert repeated.json()["already_prepared"] is True
+    assert [event["event_type"] for event in events.json()] == [
+        "incident_detected",
+        "incident_approved",
+        "dry_run_prepared",
+    ]
+
+
 def test_unknown_incident_returns_not_found(tmp_path) -> None:
     client = make_client(tmp_path)
 

@@ -20,12 +20,15 @@ class IncidentStatus(StrEnum):
     DETECTED = "detected"
     AWAITING_APPROVAL = "awaiting_approval"
     APPROVED = "approved"
+    REJECTED = "rejected"
     ACTIONED = "actioned"
 
 
 class AuditEventType(StrEnum):
     INCIDENT_DETECTED = "incident_detected"
     INCIDENT_APPROVED = "incident_approved"
+    INCIDENT_REJECTED = "incident_rejected"
+    DRY_RUN_PREPARED = "dry_run_prepared"
 
 
 class ResolutionKind(StrEnum):
@@ -61,10 +64,17 @@ class DraftAction(BaseModel):
     requires_human_approval: bool = True
     approved_by: str | None = None
     approved_at: datetime | None = None
+    rejected_by: str | None = None
+    rejected_at: datetime | None = None
+    rejection_reason: str | None = None
 
     @property
     def is_approved(self) -> bool:
         return self.approved_by is not None
+
+    @property
+    def is_rejected(self) -> bool:
+        return self.rejected_by is not None
 
 
 class Incident(BaseModel):
@@ -86,3 +96,14 @@ class AuditEvent(BaseModel):
     occurred_at: datetime
     actor: str | None = None
     detail: str
+
+
+class DryRunPreview(BaseModel):
+    """A non-network representation of the outbound action an adapter would take."""
+
+    incident_id: str
+    draft_id: str
+    action_kind: ResolutionKind
+    request_summary: str
+    external_request_sent: bool = False
+    already_prepared: bool = False

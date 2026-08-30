@@ -32,4 +32,16 @@ def demo_orders() -> list[Order]:
             currency="PLN",
             lines=[OrderLine(sku="MUG-02", title="Ceramic Mug", quantity=2)],
         ),
+        Order(
+            id="order-1044",
+            customer_name="Tomasz Zielinski",
+            customer_email="tomasz@example.com",
+            carrier="NorthStar Parcel",
+            carrier_status=CarrierStatus.LOST,
+            hours_without_tracking_update=36,
+            promised_delivery_date=now - timedelta(days=2),
+            total_amount=8900,
+            currency="PLN",
+            lines=[OrderLine(sku="BAG-01", title="Canvas Tote Bag", quantity=1)],
+        ),
     ]

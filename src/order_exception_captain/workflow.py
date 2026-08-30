@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from typing import Protocol
 
 from .domain import CarrierStatus, DraftAction, Incident, IncidentStatus, Order, ResolutionKind
+from .redaction import redact_text
 
 
 class SpecialistRunner(Protocol):
@@ -56,9 +57,11 @@ class DeterministicCoordinator:
             return None
 
         incident_id = f"delivery-{order.id}-{order.carrier_status}"
-        evidence = self._runner.run("evidence", self._evidence_prompt(order, route))
-        policy_summary = self._runner.run("resolution", self._policy_prompt(order, route, evidence))
-        customer_message = self._runner.run("communications", self._message_prompt(order, route, policy_summary))
+        evidence = redact_text(self._runner.run("evidence", self._evidence_prompt(order, route)))
+        policy_summary = redact_text(self._runner.run("resolution", self._policy_prompt(order, route, evidence)))
+        customer_message = redact_text(
+            self._runner.run("communications", self._message_prompt(order, route, policy_summary))
+        )
 
         draft = DraftAction(
             id=f"draft-{incident_id}",
@@ -96,7 +99,7 @@ class DeterministicCoordinator:
         return (
             "Draft a warm, plain-language customer update under 80 words. State that the operator will review "
             "the next step; do not promise a refund, replacement, or delivery date. "
-            f"Customer={order.customer_name}; order={order.id}; resolution_under_review={route.resolution}; "
+            f"Customer=customer; order={order.id}; resolution_under_review={route.resolution}; "
             f"context={policy_summary}"
         )
 

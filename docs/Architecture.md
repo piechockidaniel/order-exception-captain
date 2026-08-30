@@ -19,6 +19,28 @@ sample-store event / carrier feed
        named human operator
 ```
 
+## Local operator workflow
+
+The local dashboard is served by the same FastAPI process. It reads persisted
+incidents and audit records, can load synthetic demo data, and gives a named
+operator exactly two choices for a pending draft: approve or reject with a
+reason. Both decisions append an audit event. Neither decision sends a
+customer message, changes an order, or calls a carrier.
+
+Source `Order` data is used only during deterministic triage and is not stored
+with an incident. Customer names and emails are excluded from all specialist
+prompts. A deterministic boundary filter redacts common email and phone-number
+patterns from specialist outputs, rejection reasons, and every operator-facing
+incident or audit response.
+
+## Dry-run integration boundary
+
+`DryRunOutboundAdapter` is the first integration-shaped component. It has no
+HTTP client, credentials, or external endpoint. After named approval, it
+creates a deterministic preview and appends one `dry_run_prepared` audit event.
+Repeating that command is idempotent. A future real adapter must stay behind
+this approval boundary and require a new explicit integration decision.
+
 The coordinator owns branching, ordering, idempotency, and approval gates. It
 uses explicit carrier states and thresholds, rather than asking a language model
 to decide what work should happen. Strands specialists add bounded value where

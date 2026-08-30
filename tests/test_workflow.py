@@ -4,6 +4,15 @@ from order_exception_captain.domain import CarrierStatus, IncidentStatus, Order,
 from order_exception_captain.workflow import DeterministicCoordinator, TemplateSpecialistRunner
 
 
+class CapturingSpecialistRunner:
+    def __init__(self) -> None:
+        self.prompts: list[str] = []
+
+    def run(self, role: str, prompt: str) -> str:
+        self.prompts.append(prompt)
+        return "Please call +48 123 456 789 or contact person@example.com."
+
+
 def make_order(*, status: CarrierStatus, hours: int, promised_delta_days: int) -> Order:
     return Order(
         id="order-test",
@@ -46,3 +55,19 @@ def test_lost_order_selects_replacement_before_any_specialist_runs() -> None:
 
     assert incident is not None
     assert incident.drafts[0].kind is ResolutionKind.REPLACEMENT
+
+
+def test_specialist_prompts_minimise_customer_data_and_outputs_are_redacted() -> None:
+    runner = CapturingSpecialistRunner()
+    order = make_order(status=CarrierStatus.LOST, hours=1, promised_delta_days=1)
+    order.customer_name = "Ada Customer"
+    order.customer_email = "ada.customer@example.com"
+
+    incident = DeterministicCoordinator(runner).triage(order)
+
+    assert incident is not None
+    prompts = " ".join(runner.prompts)
+    assert "Ada Customer" not in prompts
+    assert "ada.customer@example.com" not in prompts
+    assert "[redacted phone]" in incident.customer_message_draft
+    assert "[redacted email]" in incident.customer_message_draft

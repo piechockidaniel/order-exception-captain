@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A local review desk for ecommerce delivery exceptions.">
+    <title>Order Exception Captain</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/assets/app.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Post-purchase operations</p>
+          <h1>Order Exception Captain</h1>
+        </div>
+        <div class="topbar-actions">
+          <span class="local-badge">Local demo · no external actions</span>
+          <button id="refresh-button" class="button secondary" type="button">Refresh</button>
+          <button id="demo-button" class="button primary" type="button">Load demo queue</button>
+        </div>
+      </header>
+
+      <section class="intro" aria-labelledby="intro-heading">
+        <div>
+          <p class="eyebrow">Operator review desk</p>
+          <h2 id="intro-heading">Resolve delivery issues with a human in control.</h2>
+          <p>Policy detects the exception. Specialists prepare evidence and language. You approve or reject the next step—nothing is sent from this workspace.</p>
+        </div>
+        <div class="rule-card">
+          <span>Decision rule</span>
+          <strong>Every draft requires a named human decision.</strong>
+        </div>
+      </section>
+
+      <section class="metrics" aria-label="Incident summary">
+        <article><span>Awaiting review</span><strong id="awaiting-count">0</strong></article>
+        <article><span>Approved</span><strong id="approved-count">0</strong></article>
+        <article><span>Rejected</span><strong id="rejected-count">0</strong></article>
+        <article><span>Total cases</span><strong id="total-count">0</strong></article>
+      </section>
+
+      <section class="workbench" aria-label="Incident workbench">
+        <div class="queue-panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Queue</p>
+              <h2>Delivery incidents</h2>
+            </div>
+            <span id="queue-caption" class="muted">No cases loaded</span>
+          </div>
+          <div id="queue" class="queue" aria-live="polite"></div>
+        </div>
+
+        <aside id="detail-panel" class="detail-panel" aria-live="polite">
+          <div class="empty-state">
+            <p class="eyebrow">Ready when you are</p>
+            <h2>Choose an incident to review.</h2>
+            <p>Load the synthetic queue, then inspect its policy evidence and full audit history.</p>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <dialog id="decision-dialog" aria-labelledby="decision-title">
+      <form id="decision-form" method="dialog">
+        <p class="eyebrow" id="decision-kind">Human decision required</p>
+        <h2 id="decision-title">Approve proposed next step</h2>
+        <p id="decision-summary" class="dialog-summary"></p>
+        <label>
+          Your name
+          <input id="operator-name" name="operator" autocomplete="name" maxlength="120" required>
+        </label>
+        <label id="reason-field" hidden>
+          Why reject this draft?
+          <textarea id="rejection-reason" name="reason" minlength="3" maxlength="500"></textarea>
+        </label>
+        <p id="decision-error" class="form-error" role="alert"></p>
+        <div class="dialog-actions">
+          <button id="cancel-decision" class="button secondary" type="button">Cancel</button>
+          <button id="confirm-decision" class="button primary" type="submit">Confirm approval</button>
+        </div>
+      </form>
+    </dialog>
+
+    <template id="empty-queue-template">
+      <div class="empty-state queue-empty">
+        <p class="eyebrow">No incidents yet</p>
+        <h2>The review queue is clear.</h2>
+        <p>Load the demo queue to create one deterministic, approval-gated delivery exception.</p>
+      </div>
+    </template>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

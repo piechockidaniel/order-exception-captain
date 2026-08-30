@@ -37,3 +37,19 @@ def test_approval_requires_a_named_operator() -> None:
 
     with pytest.raises(ValueError, match="approving operator"):
         ApprovalService().approve(incident, "  ")
+
+
+def test_rejection_requires_a_reason_and_redacts_direct_identifiers() -> None:
+    incident = DeterministicCoordinator(TemplateSpecialistRunner()).triage(make_lost_order("order-rejection"))
+    assert incident is not None
+
+    rejected = ApprovalService().reject(
+        incident,
+        "A. Operator",
+        "Call +48 123 456 789 or email customer@example.com before retrying.",
+    )
+
+    assert rejected.status is IncidentStatus.REJECTED
+    assert rejected.drafts[0].rejected_by == "A. Operator"
+    assert rejected.drafts[0].rejected_at is not None
+    assert rejected.drafts[0].rejection_reason == "Call [redacted phone] or email [redacted email] before retrying."

@@ -45,7 +45,21 @@ uv run order-exception-captain-api --database data/demo.sqlite3
 
 `POST /scans` accepts synthetic order data, `GET /incidents` shows persisted
 drafts, and `POST /incidents/{id}/approve` records a named operator approval.
-The API is local by default and has no external write adapter.
+Open [http://127.0.0.1:8000/](http://127.0.0.1:8000/) for the local operator
+dashboard. It can load a synthetic queue, show evidence and audit history, and
+record a named approval or rejection. The API is local by default and has no
+external write adapter.
+
+For a repeatable presenter walkthrough, see the [operator guide](docs/OperatorGuide.md).
+The demo queue contains a stalled delivery and a lost parcel. An approved draft
+can prepare a visible, idempotent dry-run handoff; that adapter has no network
+client or external credentials and always records `external_request_sent=false`.
+
+Customer names and emails are excluded from specialist prompts and original
+orders are not stored with incidents. The service also redacts common email and
+phone-number patterns before persisting specialist drafts or rejection reasons,
+and before returning operator-facing records. This is a data-minimization
+guardrail, not a substitute for a real-store privacy review.
 
 ## Optional live Strands smoke test
 
