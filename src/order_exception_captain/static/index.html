@@ -17,6 +17,8 @@
         </div>
         <div class="topbar-actions">
           <span class="local-badge">Local demo · no external actions</span>
+          <span id="access-status" class="local-badge" hidden></span>
+          <button id="unlock-button" class="button secondary" type="button" hidden>Unlock operator desk</button>
           <button id="refresh-button" class="button secondary" type="button">Refresh</button>
           <button id="demo-button" class="button primary" type="button">Load demo queue</button>
         </div>
@@ -81,6 +83,23 @@
         <div class="dialog-actions">
           <button id="cancel-decision" class="button secondary" type="button">Cancel</button>
           <button id="confirm-decision" class="button primary" type="submit">Confirm approval</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="access-dialog" aria-labelledby="access-title">
+      <form id="access-form" method="dialog">
+        <p class="eyebrow">Protected operator desk</p>
+        <h2 id="access-title">Enter operator access token</h2>
+        <p class="dialog-summary">This token is held only for this open page. It is never stored in the browser.</p>
+        <label>
+          Operator access token
+          <input id="access-token" name="token" type="password" autocomplete="off" maxlength="512" required>
+        </label>
+        <p id="access-error" class="form-error" role="alert"></p>
+        <div class="dialog-actions">
+          <button id="cancel-access" class="button secondary" type="button">Cancel</button>
+          <button id="confirm-access" class="button primary" type="submit">Unlock desk</button>
         </div>
       </form>
     </dialog>

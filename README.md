@@ -76,6 +76,18 @@ phone-number patterns before persisting specialist drafts or rejection reasons,
 and before returning operator-facing records. This is a data-minimization
 guardrail, not a substitute for a real-store privacy review.
 
+## Operator access outside localhost
+
+The default loopback demo is intentionally open for a presenter. To bind the
+service to any non-local host, set a 16+-character `OEC_OPERATOR_TOKEN` in the
+host environment. Startup refuses a non-local host without it. The dashboard
+will request the token and retains it only for the open page; API clients send
+it as `Authorization: Bearer <token>`.
+
+This is a minimal access boundary, not user identity: the named operator in an
+approval remains an auditable declaration. A real deployment should terminate
+TLS and place this service behind company SSO or an identity-aware proxy.
+
 ## Optional live Strands smoke test
 
 The live proof is an explicit, local-only opt-in. It uses the OpenAI provider
@@ -110,6 +122,7 @@ trace, and cost boundary. That folder is ignored by Git.
 - The first demo uses synthetic, reserved-domain example customers only.
 - No refund, replacement, cancellation or customer message is sent by the
   current code.
+- A non-local API binding cannot start without an operator access token.
 
 ## Architecture and delivery plan
 

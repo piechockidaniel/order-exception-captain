@@ -8,12 +8,13 @@ from pathlib import Path
 
 import uvicorn
 from fastapi import FastAPI, HTTPException, Query, status
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from .domain import AuditEvent, DryRunPreview, Incident, Order, ScanActivity, ScanActivityStatus
 from .dry_run import DryRunOutboundAdapter
+from .operator_access import OperatorAccess, OperatorAccessConfigurationError, require_access_for_host
 from .persistence import SqliteIncidentRepository
 from .redaction import redact_event_for_operator, redact_incident_for_operator
 from .scanning import IncidentScanService, ScanResult
@@ -33,11 +34,12 @@ class RejectionRequest(ApprovalRequest):
     reason: str = Field(min_length=3, max_length=500)
 
 
-def create_app(database_path: str | Path) -> FastAPI:
+def create_app(database_path: str | Path, operator_token: str | None = None) -> FastAPI:
     """Create an application with an explicit database location for simple testing and deployment."""
     repository = SqliteIncidentRepository(database_path)
     scanner = IncidentScanService(DeterministicCoordinator(TemplateSpecialistRunner()), repository)
     dry_run_adapter = DryRunOutboundAdapter()
+    operator_access = OperatorAccess.from_token(operator_token)
 
     app = FastAPI(
         title="Order Exception Captain",
@@ -48,13 +50,24 @@ def create_app(database_path: str | Path) -> FastAPI:
     dashboard_assets = Path(__file__).parent / "static"
     app.mount("/assets", StaticFiles(directory=dashboard_assets), name="assets")
 
+    @app.middleware("http")
+    async def require_operator_access(request, call_next):
+        public_path = request.url.path in {"/", "/health"} or request.url.path.startswith("/assets/")
+        if not public_path and not operator_access.authorizes(request.headers.get("Authorization")):
+            return JSONResponse(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                content={"detail": "Operator access token required."},
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        return await call_next(request)
+
     @app.get("/", include_in_schema=False)
     def dashboard() -> FileResponse:
         return FileResponse(dashboard_assets / "index.html")
 
     @app.get("/health")
     def health() -> dict[str, str]:
-        return {"status": "ok"}
+        return {"status": "ok", "operator_access": "token_required" if operator_access.is_enabled else "local_open"}
 
     @app.post("/scans", response_model=ScanResult, status_code=status.HTTP_200_OK)
     def scan(request: ScanRequest) -> ScanResult:
@@ -147,5 +160,10 @@ def main() -> None:
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8000)
     args = parser.parse_args()
-    app = create_app(args.database)
+    try:
+        operator_access = OperatorAccess.from_environment()
+        require_access_for_host(args.host, operator_access)
+    except OperatorAccessConfigurationError as error:
+        parser.error(str(error))
+    app = create_app(args.database, operator_token=operator_access.token)
     uvicorn.run(app, host=args.host, port=args.port)

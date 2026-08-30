@@ -1,4 +1,4 @@
-const state = { incidents: [], selectedId: null, events: [], latestActivity: null, pendingDecision: null };
+const state = { incidents: [], selectedId: null, events: [], latestActivity: null, pendingDecision: null, tokenRequired: false, operatorToken: null };
 
 const elements = {
   queue: document.querySelector("#queue"),
@@ -18,6 +18,14 @@ const elements = {
   cancel: document.querySelector("#cancel-decision"),
   error: document.querySelector("#decision-error"),
   activity: document.querySelector("#last-activity"),
+  accessStatus: document.querySelector("#access-status"),
+  unlock: document.querySelector("#unlock-button"),
+  accessDialog: document.querySelector("#access-dialog"),
+  accessForm: document.querySelector("#access-form"),
+  accessToken: document.querySelector("#access-token"),
+  accessError: document.querySelector("#access-error"),
+  confirmAccess: document.querySelector("#confirm-access"),
+  cancelAccess: document.querySelector("#cancel-access"),
 };
 
 function escapeHtml(value) {
@@ -35,7 +43,10 @@ function formatTimestamp(value) {
 }
 
 async function request(path, options = {}) {
-  const response = await fetch(path, { headers: { "Content-Type": "application/json" }, ...options });
+  const headers = { ...options.headers };
+  if (options.body) headers["Content-Type"] = "application/json";
+  if (state.operatorToken) headers.Authorization = `Bearer ${state.operatorToken}`;
+  const response = await fetch(path, { ...options, headers });
   if (!response.ok) {
     const payload = await response.json().catch(() => ({}));
     throw new Error(payload.detail || "The local service could not complete that request.");
@@ -62,6 +73,16 @@ function renderActivity() {
     ? `${activity.scanned_orders} orders · ${activity.new_incident_count} new cases`
     : "review source configuration";
   elements.activity.textContent = `Latest scan: ${readable(activity.status)} · ${counts} · ${formatTimestamp(activity.occurred_at)}`;
+}
+
+function renderAccess() {
+  const visible = state.tokenRequired;
+  elements.accessStatus.hidden = !visible;
+  elements.unlock.hidden = !visible;
+  if (!visible) return;
+  const unlocked = Boolean(state.operatorToken);
+  elements.accessStatus.textContent = unlocked ? "Operator access unlocked" : "Operator token required";
+  elements.unlock.textContent = unlocked ? "Change access token" : "Unlock operator desk";
 }
 
 function renderQueue() {
@@ -156,6 +177,28 @@ elements.demo.addEventListener("click", async () => {
   finally { elements.demo.disabled = false; }
 });
 elements.refresh.addEventListener("click", () => refreshQueue().catch((error) => { elements.detail.innerHTML = `<p class="error-banner">${escapeHtml(error.message)}</p>`; }));
+elements.unlock.addEventListener("click", () => {
+  elements.accessToken.value = "";
+  elements.accessError.textContent = "";
+  elements.accessDialog.showModal();
+  elements.accessToken.focus();
+});
+elements.cancelAccess.addEventListener("click", () => elements.accessDialog.close());
+elements.accessForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const previousToken = state.operatorToken;
+  state.operatorToken = elements.accessToken.value.trim();
+  elements.confirmAccess.disabled = true;
+  elements.accessError.textContent = "";
+  try {
+    await refreshQueue();
+    elements.accessDialog.close();
+    renderAccess();
+  } catch (error) {
+    state.operatorToken = previousToken;
+    elements.accessError.textContent = error.message;
+  } finally { elements.confirmAccess.disabled = false; }
+});
 elements.cancel.addEventListener("click", () => elements.dialog.close());
 elements.form.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -173,4 +216,11 @@ elements.form.addEventListener("submit", async (event) => {
   finally { elements.confirm.disabled = false; }
 });
 
-refreshQueue().catch((error) => { elements.detail.innerHTML = `<p class="error-banner">${escapeHtml(error.message)}</p>`; });
+async function initialise() {
+  const health = await request("/health");
+  state.tokenRequired = health.operator_access === "token_required";
+  renderAccess();
+  if (!state.tokenRequired) await refreshQueue();
+}
+
+initialise().catch((error) => { elements.detail.innerHTML = `<p class="error-banner">${escapeHtml(error.message)}</p>`; });

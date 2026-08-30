@@ -33,6 +33,20 @@ prompts. A deterministic boundary filter redacts common email and phone-number
 patterns from specialist outputs, rejection reasons, and every operator-facing
 incident or audit response.
 
+## Access boundary
+
+The default server binds to loopback and permits a local, presentation-friendly
+operator workflow. A non-loopback bind is rejected at startup unless a
+16+-character `OEC_OPERATOR_TOKEN` is configured. When enabled, all data and
+mutation endpoints require a bearer token. The health endpoint and static
+dashboard shell remain public so the user can supply that token; the dashboard
+keeps it in memory only, never browser storage.
+
+This deliberately protects desk access rather than impersonating a full
+identity system. The approval name is still a human-entered audit declaration;
+a deployed instance should be placed behind TLS and an identity-aware proxy or
+SSO before it is used with non-synthetic data.
+
 ## Dry-run integration boundary
 
 `DryRunOutboundAdapter` is the first integration-shaped component. It has no

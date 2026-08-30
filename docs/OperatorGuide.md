@@ -55,3 +55,21 @@ uv run order-exception-captain-scan --orders examples/synthetic-orders.json --da
 Refresh the dashboard to review any detected incident. The scheduler reads the
 snapshot only; it never changes the file or takes an external action. Omit
 `--once` to repeat the scan every five minutes.
+
+## Run on a non-local host
+
+Only do this behind HTTPS and a controlled network boundary. Configure an
+operator token in the host environment through your secret manager, then start
+the service. Do not put the value in a `.env` file that might be committed, the
+browser URL, or this guide.
+
+```powershell
+$env:OEC_OPERATOR_TOKEN = "<secret-held-outside-the-repository>"
+uv run order-exception-captain-api --host 0.0.0.0 --database data/operator.sqlite3
+```
+
+The dashboard opens with an **Unlock operator desk** control. Enter the same
+token after reaching the site; it is held only while that page remains open.
+The token protects access, while the name entered during approval remains the
+human-readable audit record. Use SSO or an identity-aware reverse proxy before
+using a real store connection.
