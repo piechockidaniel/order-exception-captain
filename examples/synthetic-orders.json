@@ -1,0 +1,28 @@
+{
+  "orders": [
+    {
+      "id": "scheduled-1001",
+      "customer_name": "Synthetic Customer",
+      "customer_email": "synthetic.customer@example.com",
+      "carrier": "Example Parcel",
+      "carrier_status": "stalled",
+      "hours_without_tracking_update": 52,
+      "promised_delivery_date": "2020-01-01T00:00:00Z",
+      "total_amount": 12900,
+      "currency": "PLN",
+      "lines": [{ "sku": "DEMO-01", "title": "Synthetic item", "quantity": 1 }]
+    },
+    {
+      "id": "scheduled-1002",
+      "customer_name": "Synthetic In-Transit Customer",
+      "customer_email": "in-transit@example.com",
+      "carrier": "Example Parcel",
+      "carrier_status": "in_transit",
+      "hours_without_tracking_update": 4,
+      "promised_delivery_date": "2099-01-01T00:00:00Z",
+      "total_amount": 4900,
+      "currency": "PLN",
+      "lines": [{ "sku": "DEMO-02", "title": "Normal synthetic item", "quantity": 1 }]
+    }
+  ]
+}

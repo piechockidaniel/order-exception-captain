@@ -21,6 +21,7 @@ dev = ["pytest>=8.3,<9"]
 order-exception-captain = "order_exception_captain.app:main"
 order-exception-captain-api = "order_exception_captain.api:main"
 order-exception-captain-live = "order_exception_captain.live_demo:main"
+order-exception-captain-scan = "order_exception_captain.scheduled_scan:main"
 
 [build-system]
 requires = ["hatchling>=1.26"]

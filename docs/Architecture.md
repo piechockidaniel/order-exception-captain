@@ -41,6 +41,14 @@ creates a deterministic preview and appends one `dry_run_prepared` audit event.
 Repeating that command is idempotent. A future real adapter must stay behind
 this approval boundary and require a new explicit integration decision.
 
+## Read-only scheduled ingestion
+
+`JsonOrderFileSource` is the first source adapter. It reads a snapshot and
+exposes only the `OrderSource.load_orders()` contract; it cannot modify the
+input file. `ReadOnlyScheduledScan` passes that snapshot to the existing
+deterministic coordinator and persists only approval-gated incidents. The
+manual `POST /scans` API remains available if a scheduled source is unavailable.
+
 The coordinator owns branching, ordering, idempotency, and approval gates. It
 uses explicit carrier states and thresholds, rather than asking a language model
 to decide what work should happen. Strands specialists add bounded value where

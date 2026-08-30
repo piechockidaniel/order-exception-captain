@@ -55,6 +55,21 @@ The demo queue contains a stalled delivery and a lost parcel. An approved draft
 can prepare a visible, idempotent dry-run handoff; that adapter has no network
 client or external credentials and always records `external_request_sent=false`.
 
+## Read-only scheduled scan
+
+The local scheduler reads an order snapshot, invokes the same deterministic
+triage, and writes only approval-gated incidents to SQLite. It never writes to
+the source, a store, carrier, customer, or payment system. The existing
+`POST /scans` endpoint remains the manual fallback.
+
+```powershell
+uv run order-exception-captain-scan --orders examples/synthetic-orders.json --database data/scheduled-demo.sqlite3 --once
+```
+
+Omit `--once` to scan the source every five minutes. The command emits one
+structured activity record per run and a redacted failure record if the input
+is unavailable or invalid.
+
 Customer names and emails are excluded from specialist prompts and original
 orders are not stored with incidents. The service also redacts common email and
 phone-number patterns before persisting specialist drafts or rejection reasons,

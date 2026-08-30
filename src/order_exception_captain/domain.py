@@ -31,6 +31,11 @@ class AuditEventType(StrEnum):
     DRY_RUN_PREPARED = "dry_run_prepared"
 
 
+class ScanActivityStatus(StrEnum):
+    SUCCEEDED = "succeeded"
+    FAILED = "failed"
+
+
 class ResolutionKind(StrEnum):
     CARRIER_ESCALATION = "carrier_escalation"
     REPLACEMENT = "replacement"
@@ -107,3 +112,16 @@ class DryRunPreview(BaseModel):
     request_summary: str
     external_request_sent: bool = False
     already_prepared: bool = False
+
+
+class ScanActivity(BaseModel):
+    """A privacy-safe operational record; it never contains an order snapshot."""
+
+    id: int | None = None
+    occurred_at: datetime
+    mode: str
+    status: ScanActivityStatus
+    scanned_orders: int | None = Field(default=None, ge=0)
+    new_incident_count: int | None = Field(default=None, ge=0)
+    existing_incident_count: int | None = Field(default=None, ge=0)
+    detail: str

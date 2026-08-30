@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Protocol
 
 from .approvals import ApprovalService
-from .domain import AuditEvent, AuditEventType, Incident, IncidentStatus
+from .domain import AuditEvent, AuditEventType, Incident, IncidentStatus, ScanActivity
 
 
 class IncidentRepository(Protocol):
@@ -31,6 +31,12 @@ class IncidentRepository(Protocol):
 
     def record_dry_run(self, incident_id: str, operator: str) -> bool:
         """Record one prepared dry run for an approved incident. Return true if newly recorded."""
+
+    def record_scan_activity(self, activity: ScanActivity) -> None:
+        """Persist a privacy-safe operational record for a scan attempt."""
+
+    def list_scan_activity(self, limit: int = 20) -> list[ScanActivity]:
+        """Return recent scan records, newest first."""
 
     def list_events(self, incident_id: str) -> list[AuditEvent]:
         """Return the ordered audit events for one incident."""
@@ -161,6 +167,52 @@ class SqliteIncidentRepository:
             )
             return True
 
+    def record_scan_activity(self, activity: ScanActivity) -> None:
+        with self._connect() as connection:
+            connection.execute(
+                """
+                INSERT INTO scan_activity (
+                    occurred_at, mode, status, scanned_orders,
+                    new_incident_count, existing_incident_count, detail
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    activity.occurred_at.isoformat(),
+                    activity.mode,
+                    activity.status.value,
+                    activity.scanned_orders,
+                    activity.new_incident_count,
+                    activity.existing_incident_count,
+                    activity.detail,
+                ),
+            )
+
+    def list_scan_activity(self, limit: int = 20) -> list[ScanActivity]:
+        with self._connect() as connection:
+            rows = connection.execute(
+                """
+                SELECT id, occurred_at, mode, status, scanned_orders,
+                       new_incident_count, existing_incident_count, detail
+                FROM scan_activity
+                ORDER BY occurred_at DESC, id DESC
+                LIMIT ?
+                """,
+                (limit,),
+            ).fetchall()
+        return [
+            ScanActivity(
+                id=row["id"],
+                occurred_at=row["occurred_at"],
+                mode=row["mode"],
+                status=row["status"],
+                scanned_orders=row["scanned_orders"],
+                new_incident_count=row["new_incident_count"],
+                existing_incident_count=row["existing_incident_count"],
+                detail=row["detail"],
+            )
+            for row in rows
+        ]
+
     def list_events(self, incident_id: str) -> list[AuditEvent]:
         self.get_incident(incident_id)
         with self._connect() as connection:
@@ -205,6 +257,17 @@ class SqliteIncidentRepository:
                     detail TEXT NOT NULL
                 );
                 CREATE INDEX IF NOT EXISTS ix_audit_events_incident ON audit_events(incident_id, id);
+                CREATE TABLE IF NOT EXISTS scan_activity (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    occurred_at TEXT NOT NULL,
+                    mode TEXT NOT NULL,
+                    status TEXT NOT NULL,
+                    scanned_orders INTEGER NULL,
+                    new_incident_count INTEGER NULL,
+                    existing_incident_count INTEGER NULL,
+                    detail TEXT NOT NULL
+                );
+                CREATE INDEX IF NOT EXISTS ix_scan_activity_occurred_at ON scan_activity(occurred_at DESC, id DESC);
                 """
             )
 

@@ -43,3 +43,15 @@ queue**. The queue includes two synthetic exceptions:
 All data in this walkthrough is synthetic. Before connecting a real store, use
 the data-minimisation controls documented in the architecture and obtain
 explicit authorisation for the selected integration.
+
+## Run a read-only scheduled demo scan
+
+In a second local terminal, run the example snapshot once:
+
+```powershell
+uv run order-exception-captain-scan --orders examples/synthetic-orders.json --database data/demo-20260830.sqlite3 --once
+```
+
+Refresh the dashboard to review any detected incident. The scheduler reads the
+snapshot only; it never changes the file or takes an external action. Omit
+`--once` to repeat the scan every five minutes.

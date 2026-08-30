@@ -1,4 +1,4 @@
-const state = { incidents: [], selectedId: null, events: [], pendingDecision: null };
+const state = { incidents: [], selectedId: null, events: [], latestActivity: null, pendingDecision: null };
 
 const elements = {
   queue: document.querySelector("#queue"),
@@ -17,6 +17,7 @@ const elements = {
   confirm: document.querySelector("#confirm-decision"),
   cancel: document.querySelector("#cancel-decision"),
   error: document.querySelector("#decision-error"),
+  activity: document.querySelector("#last-activity"),
 };
 
 function escapeHtml(value) {
@@ -49,6 +50,18 @@ function renderMetrics() {
   setMetric("#approved-count", state.incidents.filter((incident) => incident.status === "approved").length);
   setMetric("#rejected-count", state.incidents.filter((incident) => incident.status === "rejected").length);
   setMetric("#total-count", state.incidents.length);
+}
+
+function renderActivity() {
+  const activity = state.latestActivity;
+  if (!activity) {
+    elements.activity.textContent = "Latest scan: no activity recorded";
+    return;
+  }
+  const counts = activity.status === "succeeded"
+    ? `${activity.scanned_orders} orders · ${activity.new_incident_count} new cases`
+    : "review source configuration";
+  elements.activity.textContent = `Latest scan: ${readable(activity.status)} · ${counts} · ${formatTimestamp(activity.occurred_at)}`;
 }
 
 function renderQueue() {
@@ -126,9 +139,12 @@ function openDecision(kind, incident) {
 }
 
 async function refreshQueue() {
-  state.incidents = await request("/incidents");
+  const [incidents, activity] = await Promise.all([request("/incidents"), request("/activity?limit=1")]);
+  state.incidents = incidents;
+  state.latestActivity = activity[0] || null;
   if (state.selectedId && !state.incidents.some((incident) => incident.id === state.selectedId)) state.selectedId = null;
   renderMetrics();
+  renderActivity();
   renderQueue();
   if (state.selectedId) await selectIncident(state.selectedId); else renderDetail();
 }

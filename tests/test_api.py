@@ -53,6 +53,28 @@ def test_scan_creates_only_the_exception_and_repeat_scan_is_idempotent(tmp_path)
     assert incidents[0]["status"] == "awaiting_approval"
 
 
+def test_manual_scan_records_privacy_safe_activity(tmp_path) -> None:
+    client = make_client(tmp_path)
+
+    response = client.post("/scans", json={"orders": [delivery_exception_order()]})
+    activity = client.get("/activity")
+
+    assert response.status_code == 200
+    assert activity.status_code == 200
+    assert activity.json()[0] == {
+        "id": 1,
+        "occurred_at": activity.json()[0]["occurred_at"],
+        "mode": "manual_api_scan",
+        "status": "succeeded",
+        "scanned_orders": 1,
+        "new_incident_count": 1,
+        "existing_incident_count": 0,
+        "detail": "Deterministic triage completed; no external action was attempted.",
+    }
+    assert "API Customer" not in activity.text
+    assert "customer@example.com" not in activity.text
+
+
 def test_approval_updates_the_draft_and_creates_an_audit_event(tmp_path) -> None:
     client = make_client(tmp_path)
     incident_id = "delivery-order-api-stalled"

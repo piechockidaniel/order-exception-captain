@@ -3,15 +3,16 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 from pathlib import Path
 
 import uvicorn
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, Query, status
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from .domain import AuditEvent, DryRunPreview, Incident, Order
+from .domain import AuditEvent, DryRunPreview, Incident, Order, ScanActivity, ScanActivityStatus
 from .dry_run import DryRunOutboundAdapter
 from .persistence import SqliteIncidentRepository
 from .redaction import redact_event_for_operator, redact_incident_for_operator
@@ -57,12 +58,16 @@ def create_app(database_path: str | Path) -> FastAPI:
 
     @app.post("/scans", response_model=ScanResult, status_code=status.HTTP_200_OK)
     def scan(request: ScanRequest) -> ScanResult:
-        return scanner.scan(request.orders)
+        return _scan_and_record(scanner, repository, request.orders, "manual_api_scan")
 
     @app.post("/demo/scan", response_model=ScanResult, status_code=status.HTTP_200_OK)
     def scan_demo_data() -> ScanResult:
         """Populate the local dashboard with reserved-domain, synthetic sample orders."""
-        return scanner.scan(demo_orders())
+        return _scan_and_record(scanner, repository, demo_orders(), "synthetic_demo_scan")
+
+    @app.get("/activity", response_model=list[ScanActivity])
+    def list_activity(limit: int = Query(default=10, ge=1, le=50)) -> list[ScanActivity]:
+        return repository.list_scan_activity(limit)
 
     @app.get("/incidents", response_model=list[Incident])
     def list_incidents() -> list[Incident]:
@@ -112,6 +117,28 @@ def create_app(database_path: str | Path) -> FastAPI:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Incident not found.") from error
 
     return app
+
+
+def _scan_and_record(
+    scanner: IncidentScanService,
+    repository: SqliteIncidentRepository,
+    orders: list[Order],
+    mode: str,
+) -> ScanResult:
+    occurred_at = datetime.now(timezone.utc)
+    result = scanner.scan(orders)
+    repository.record_scan_activity(
+        ScanActivity(
+            occurred_at=occurred_at,
+            mode=mode,
+            status=ScanActivityStatus.SUCCEEDED,
+            scanned_orders=result.scanned_orders,
+            new_incident_count=len(result.new_incident_ids),
+            existing_incident_count=len(result.existing_incident_ids),
+            detail="Deterministic triage completed; no external action was attempted.",
+        )
+    )
+    return result
 
 
 def main() -> None:
