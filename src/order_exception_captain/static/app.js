@@ -116,6 +116,7 @@ function openDecision(kind, incident) {
   elements.summary.textContent = incident.drafts[0].summary;
   elements.reasonField.hidden = kind !== "reject";
   elements.reason.required = kind === "reject";
+  elements.reason.disabled = kind !== "reject";
   elements.reason.value = "";
   elements.operator.value = "";
   elements.error.textContent = "";

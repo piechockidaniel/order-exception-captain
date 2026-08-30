@@ -32,6 +32,7 @@ customer-message draft; and waits for a named human before any external action.
 - [x] Add an outbound-shaped adapter with no HTTP client, credentials, or external endpoint.
 - [x] Prepare a deterministic, auditable dry-run handoff exactly once per approved incident.
 - [x] Run an end-to-end browser review of the dry-run handoff.
+- [x] Fix the approval-dialog field-visibility regression and recheck it in a browser.
 - [x] Build a distributable wheel and verify it includes the operator dashboard assets.
 - [ ] Choose one real carrier or ecommerce adapter and obtain explicit authorisation before any non-dry-run implementation.
 

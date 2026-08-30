@@ -84,6 +84,7 @@ dialog { width: min(480px, calc(100% - 2rem)); border: 1px solid var(--line); bo
 dialog::backdrop { background: #020712aa; }
 dialog form { padding: 1.5rem; }
 dialog label { display: grid; gap: .45rem; margin-top: 1rem; color: var(--muted); font-size: .9rem; font-weight: 700; }
+dialog label[hidden] { display: none; }
 input, textarea { width: 100%; border: 1px solid var(--line); border-radius: .6rem; padding: .7rem; background: #081522; color: var(--ink); }
 textarea { min-height: 6rem; resize: vertical; }
 .dialog-summary { color: var(--muted); line-height: 1.55; }
