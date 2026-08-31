@@ -27,7 +27,9 @@ The video should visibly establish all of these facts:
 3. Set an AWS billing alert or budget. `OEC_COST_BOUNDARY` records an approval,
    but it cannot enforce a dollar ceiling.
 4. Agree a small, specific first-run boundary, such as one synthetic invocation
-   with a 120-token output limit for each specialist.
+   with a 128-token output limit for each specialist. The runner rejects smaller
+   limits before a model call because they cannot reliably finish its bounded
+   tool-assisted response.
 
 ## Safe preflight
 
@@ -37,7 +39,7 @@ In a local PowerShell session, set only non-secret run settings:
 $env:OEC_MODEL_PROVIDER = "bedrock"
 $env:OEC_MODEL_ID = "<model-enabled-for-this-account>"
 $env:AWS_REGION = "<enabled-model-region>"
-$env:OEC_MAX_TOKENS = "120"
+$env:OEC_MAX_TOKENS = "128"
 $env:OEC_COST_BOUNDARY = "One synthetic proof run; operator-approved boundary: <amount>"
 uv run order-exception-captain-live
 ```

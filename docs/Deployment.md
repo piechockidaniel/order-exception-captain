@@ -18,6 +18,23 @@ Visit `http://127.0.0.1:8000/`, choose **Unlock operator desk**, and enter the
 same token. The container health check verifies the public `/health` endpoint
 and SQLite connectivity. It does not expose incident data.
 
+Docker Compose V2 is preferred. If this computer only has the older standalone
+tool, replace `docker compose` with `docker-compose` in the command above.
+
+### Fallback when Docker Buildx is unavailable
+
+If Compose reports that Buildx is missing, either install Docker Buildx or use
+this equivalent local-only fallback. It builds the same image and preserves
+SQLite data in a named Docker volume:
+
+```powershell
+docker build -t order-exception-captain:local .
+docker run --rm -p 127.0.0.1:8000:8000 --env OEC_OPERATOR_TOKEN --volume order-exception-captain-data:/app/data order-exception-captain:local
+```
+
+This fallback is for the isolated demo only. It does not make the service
+public or connect an external system.
+
 ## Activity and failure visibility
 
 The dashboard displays the latest scan status. An authenticated operator can

@@ -6,10 +6,11 @@ Track: **Professional Agents**. Current official deadline: **September 14,
 | Requirement | Status | Evidence or next action |
 |---|---|---|
 | New project created during submission period | complete | New repository; provenance is documented in the README. |
-| Strands Agents SDK and Amazon Bedrock incorporated | complete, live proof pending | Dependency and bounded Bedrock runtime roles are in source. Record the authorised live synthetic run before the video. |
-| Works consistently as depicted | in progress | 37 automated tests, wheel, browser checks, and a disposable container health check pass; record the final video against the tagged code. |
-| Public repository with visible MIT/Apache license and README | blocked on publication approval | Remote exists with MIT license and README, but repository visibility has not been changed. |
+| Strands Agents SDK and Amazon Bedrock incorporated | complete | The bounded Bedrock Haiku 4.5 trace completed on synthetic data in `eu-north-1` after a non-secret preflight. The fixed evidence → resolution → communications sequence produced no external action. |
+| Works consistently as depicted | in progress | 38 automated tests pass. Rebuild the wheel, verify the container, and record the final video against this source revision. |
+| Public repository with visible MIT/Apache license and README | complete | Anonymous GitHub lookup confirms the public repository, visible MIT license, and README. |
 | Architecture diagram | complete | Mermaid diagram in `docs/Architecture.md`. |
+| English text description and testing instructions | complete | Copy-ready [Devpost submission text](DevpostSubmission.md), README, and demo script are in English. |
 | Public video, maximum five minutes | ready to record | `docs/DemoScript.md`; upload to public YouTube or Vimeo after final live-proof run. |
 | AWS Builder ID | not started | Add it on the Devpost submission form. |
 | Optional live demo link | not started | Deploy only after hosting, telemetry, retention, and access decisions are authorised. |
@@ -18,14 +19,13 @@ Track: **Professional Agents**. Current official deadline: **September 14,
 ## Before submitting
 
 1. Re-run `uv run pytest` and capture the result.
-2. Run the authorised, synthetic Strands-on-Bedrock smoke invocation and save
-   its non-secret preflight/trace evidence.
+2. Re-run the authorised, synthetic Strands-on-Bedrock smoke invocation and save
+   its non-secret preflight/trace evidence if the model, region, prompts, or source revision changed.
 3. Optionally run an AgentCore deployment dry-run, then seek explicit approval
    before deploying it as a technical-score upgrade.
 4. Record the video using the script; keep it under five minutes and publish it.
-5. Confirm permission to make the repository public, then verify anonymous
-   access to the README and MIT license.
-5. Complete Devpost fields in English, including the code URL, diagram, video,
+5. Verify anonymous access to the public README and MIT license after the final push.
+6. Complete Devpost fields in English, including the code URL, diagram, video,
    Builder ID, and testing instructions.
 
 The official rules require a new Strands project that does real work for real

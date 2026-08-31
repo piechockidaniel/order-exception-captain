@@ -7,6 +7,7 @@ requires-python = ">=3.11"
 license = { file = "LICENSE" }
 authors = [{ name = "Order Exception Captain contributors" }]
 dependencies = [
+    "botocore[crt]>=1.43,<2",
     "email-validator>=2.2,<3",
     "fastapi>=0.115,<1",
     "pydantic>=2.9,<3",

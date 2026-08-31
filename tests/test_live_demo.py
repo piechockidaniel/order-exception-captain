@@ -11,7 +11,7 @@ def test_preflight_record_is_written_before_any_live_invocation(tmp_path) -> Non
             "OEC_MODEL_ID": "amazon.nova-lite-v1:0",
             "AWS_REGION": "us-east-1",
             "OEC_COST_BOUNDARY": "Synthetic proof only; approved by the operator.",
-            "OEC_MAX_TOKENS": "120",
+            "OEC_MAX_TOKENS": "128",
         }
     )
 

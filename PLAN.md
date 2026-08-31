@@ -19,11 +19,11 @@ customer-message draft; and waits for a named human before any external action.
 |---|---|---|
 | 1. Foundation | complete | Clean Python repository, MIT license, deterministic policy, demo data, approval gate, and five passing tests. |
 | 2. Service and persistence | complete | HTTP API, SQLite incident/audit storage, idempotent scan, nine passing tests, and a local server smoke test. |
-| 3. Live Strands proof | in progress | Explicit Bedrock and OpenAI provider configuration, three bounded specialists, a preflight record, and an opt-in smoke command; final evidence will use Bedrock after an AWS model, region, and spend boundary are selected. |
+| 3. Live Strands proof | complete | A native Bedrock Haiku 4.5 proof ran on 2026-08-30 UTC in `eu-north-1` after a non-secret preflight record. The synthetic stalled-order workflow completed evidence → resolution → communications with a 128-token limit per specialist and no external action. |
 | 4. Operator workflow | complete | Local dashboard passed a real browser approve/reject walkthrough, has PII minimisation/redaction, and includes a repeatable operator guide. |
 | 5. Safe integration | in progress | Browser-verified, approval-gated dry-run adapter generates one auditable handoff preview with no network client, credentials, or external side effect; the distributable wheel includes the operator dashboard. A real provider selection remains an explicit decision gate. |
 | 6. Production readiness | in progress | Read-only file-snapshot ingestion, scheduled scan command, a privacy-safe activity feed, token-gated non-local access, verified SQLite backups, and a loopback-only container template preserve the manual API fallback. 37 tests, wheel build, Compose validation, and a disposable container health check pass. The hosting, telemetry, retention owner, and restore cadence still need an operating decision. |
-| 7. Submission evidence | in progress | README, MIT license, architecture diagram, five-minute demo script, and a submission checklist are ready. Public visibility, authorised live Strands proof, public video, Builder ID, and optional deployment remain. |
+| 7. Submission evidence | in progress | The public GitHub repository has a MIT license and README; the architecture diagram, five-minute script, Devpost description, checklist, and authorised live Strands proof are ready. Public video and Builder ID remain external submission steps. |
 
 ## Active slice — safe integration
 
@@ -45,13 +45,13 @@ customer-message draft; and waits for a named human before any external action.
 ### Deferred live Bedrock decision
 
 - [x] Add a native Amazon Bedrock Strands provider using the ambient AWS credential chain.
-- [ ] Select an AWS region, Bedrock model enabled for that account, and a spend boundary; then explicitly authorise the first paid smoke invocation.
+- [x] Select an AWS region, Bedrock model enabled for that account, and a spend boundary; then explicitly authorise the first paid smoke invocation. The 2026-08-30 UTC synthetic proof used Haiku 4.5 in `eu-north-1`, a 128-token per-specialist ceiling, and no external adapter.
 
 ### Active submission-evidence tasks
 
 - [x] Produce a repository-native architecture diagram and five-minute demo script.
 - [x] Track every required submission item and distinguish finished evidence from external gates.
-- [ ] Authorise and capture one live synthetic Strands-on-Bedrock trace with a selected model, region, and spend boundary.
+- [x] Authorise and capture one live synthetic Strands-on-Bedrock trace with a selected model, region, and spend boundary. A non-secret preflight record and successful three-role trace were captured locally on 2026-08-30 UTC.
 - [ ] After that trace, decide whether an AgentCore deployment dry-run is justified as an optional technical-score upgrade; do not deploy without explicit approval.
 - [ ] Confirm publication permission, make the repository publicly verifiable, and record a public video.
 - [ ] Register the final project with AWS Builder ID and submit before 2026-09-14 17:00 PDT.

@@ -152,6 +152,7 @@ final video.
 - [Delivery plan](docs/DeliveryPlan.md)
 - [Five-minute demo script](docs/DemoScript.md)
 - [Submission checklist](docs/SubmissionChecklist.md)
+- [Copy-ready Devpost submission text](docs/DevpostSubmission.md)
 
 ## Provenance
 

@@ -6,6 +6,9 @@ from dataclasses import dataclass, field
 from os import environ
 from typing import Mapping, TypeAlias
 
+MINIMUM_LIVE_MAX_TOKENS = 128
+MAXIMUM_LIVE_MAX_TOKENS = 4096
+
 
 class LiveConfigurationError(ValueError):
     """Raised before a live model call when its declared boundary is incomplete."""
@@ -50,8 +53,11 @@ class OpenAIProviderConfiguration:
             max_tokens = int(raw_max_tokens)
         except ValueError as exc:
             raise LiveConfigurationError("OEC_MAX_TOKENS must be a whole number.") from exc
-        if not 1 <= max_tokens <= 4096:
-            raise LiveConfigurationError("OEC_MAX_TOKENS must be between 1 and 4096.")
+        if not MINIMUM_LIVE_MAX_TOKENS <= max_tokens <= MAXIMUM_LIVE_MAX_TOKENS:
+            raise LiveConfigurationError(
+                "OEC_MAX_TOKENS must be between 128 and 4096 so a specialist can "
+                "complete a bounded tool-assisted response."
+            )
 
         return cls(
             model_id=model_id,
@@ -119,8 +125,11 @@ class BedrockProviderConfiguration:
             max_tokens = int(raw_max_tokens)
         except ValueError as exc:
             raise LiveConfigurationError("OEC_MAX_TOKENS must be a whole number.") from exc
-        if not 1 <= max_tokens <= 4096:
-            raise LiveConfigurationError("OEC_MAX_TOKENS must be between 1 and 4096.")
+        if not MINIMUM_LIVE_MAX_TOKENS <= max_tokens <= MAXIMUM_LIVE_MAX_TOKENS:
+            raise LiveConfigurationError(
+                "OEC_MAX_TOKENS must be between 128 and 4096 so a specialist can "
+                "complete a bounded tool-assisted response."
+            )
 
         return cls(
             model_id=model_id,
@@ -157,16 +166,38 @@ def load_live_configuration(
     raise LiveConfigurationError("Set OEC_MODEL_PROVIDER to either bedrock or openai before a live call.")
 
 
-def build_live_model(configuration: LiveProviderConfiguration):
-    """Build the selected Strands model after non-secret configuration validation."""
+def build_live_model(
+    configuration: LiveProviderConfiguration, *, boto_session: object | None = None
+):
+    """Build the selected Strands model after non-secret configuration validation.
+
+    ``boto_session`` is intentionally optional. Production uses the ambient AWS
+    credential chain; tests can supply a static, non-networked session so their
+    result does not depend on a developer's active AWS profile.
+    """
     if isinstance(configuration, OpenAIProviderConfiguration):
         return build_openai_model(configuration)
 
+    from botocore.exceptions import MissingDependencyException
     from strands.models import BedrockModel
 
-    return BedrockModel(
-        model_id=configuration.model_id,
-        region_name=configuration.region_name,
-        max_tokens=configuration.max_tokens,
-        temperature=0,
-    )
+    try:
+        if boto_session is not None:
+            return BedrockModel(
+                boto_session=boto_session,
+                model_id=configuration.model_id,
+                max_tokens=configuration.max_tokens,
+                temperature=0,
+            )
+
+        return BedrockModel(
+            model_id=configuration.model_id,
+            region_name=configuration.region_name,
+            max_tokens=configuration.max_tokens,
+            temperature=0,
+        )
+    except MissingDependencyException as exc:
+        raise LiveConfigurationError(
+            "The configured AWS login profile requires CRT support. Run `uv sync` "
+            "to install this project's botocore[crt] dependency, then retry."
+        ) from exc
