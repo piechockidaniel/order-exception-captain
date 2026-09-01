@@ -122,3 +122,13 @@ token after reaching the site; it is held only while that page remains open.
 The token protects access, while the name entered during approval remains the
 human-readable audit record. Use SSO or an identity-aware reverse proxy before
 using a real store connection.
+
+### Current VPS demo tokens
+
+The deployed demonstration instance creates its two application tokens on the
+VPS, once during provisioning, with `openssl rand -hex 32`. They are stored in
+the root-only `/etc/order-exception-captain/oec.env` file and do not originate
+from AWS, Bedrock, WooCommerce, or the source repository. See the
+[deployment guide](Deployment.md#token-origin-and-handling) for safe retrieval
+and rotation guidance. Never include those values in the demo recording or a
+public submission.

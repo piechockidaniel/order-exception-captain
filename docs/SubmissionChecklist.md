@@ -7,13 +7,13 @@ Track: **Professional Agents**. Current official deadline: **September 14,
 |---|---|---|
 | New project created during submission period | complete | New repository; provenance is documented in the README. |
 | Strands Agents SDK and Amazon Bedrock incorporated | complete | The bounded Bedrock Haiku 4.5 trace completed on synthetic data in `eu-north-1` after a non-secret preflight. The fixed evidence → resolution → communications sequence produced no external action. |
-| Works consistently as depicted | in progress | 49 automated tests pass, including versioned-policy and read-only WooCommerce-source coverage. Rebuild the wheel, verify the container, and record the final video against this source revision. |
+| Works consistently as depicted | complete for the synthetic demo | 49 automated tests pass, and the live VPS demo has verified HTTPS, health, token-gated routes, administrator access, and a SQLite integrity-checked backup. Record the final video against this source revision. |
 | Public repository with visible MIT/Apache license and README | complete | Anonymous GitHub lookup confirms the public repository, visible MIT license, and README. |
 | Architecture diagram | complete | Mermaid diagram in `docs/Architecture.md`. |
 | English text description and testing instructions | complete | Copy-ready [Devpost submission text](DevpostSubmission.md), README, and demo script are in English. |
 | Public video, maximum five minutes | ready to record | `docs/DemoScript.md`; upload to public YouTube or Vimeo after final live-proof run. |
 | AWS Builder ID | not started | Add it on the Devpost submission form. |
-| Optional live demo link | not started | Deploy only after hosting, telemetry, retention, and access decisions are authorised. |
+| Optional live demo link | complete | [`https://oec.connect-the-dots.biz`](https://oec.connect-the-dots.biz) serves the synthetic dashboard over HTTPS. Its operator/admin tokens are generated and held only on the VPS; do not publish them. |
 | Optional AWS Builder blog post | not started | Can cover the product journey after the submission is stable. |
 
 ## Before submitting

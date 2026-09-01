@@ -37,6 +37,12 @@ On a protected service, configure a distinct 16+-character `OEC_ADMIN_TOKEN`.
 An operator token alone cannot test or publish policy. The page holds both
 tokens only in memory.
 
+For the deployed demo, both tokens were generated once on the VPS during
+provisioning with the operating system's cryptographic random generator. They
+are not AWS, Bedrock, WooCommerce, or GitHub credentials, are never committed
+to this repository, and are stored only in the root-owned server file described
+in the [deployment guide](docs/Deployment.md#token-origin-and-handling).
+
 The optional WooCommerce source calls only `GET /wp-json/wc/v3/orders` over
 HTTPS and paginates using WooCommerce's response headers. Create a WooCommerce
 REST API key with **Read** access, keep its values in the host secret store,
@@ -138,10 +144,10 @@ TLS and place this service behind company SSO or an identity-aware proxy.
 
 ## Deployment and recovery
 
-A loopback-only Docker Compose template, SQLite health check, verified backup
-command, retention guidance, and rollback procedure are in the
-[deployment guide](docs/Deployment.md). It does not provision infrastructure
-or connect an external system.
+A loopback-only Docker Compose template, a live OpenLiteSpeed VPS deployment,
+SQLite health check, verified backup command, retention guidance, and rollback
+procedure are in the [deployment guide](docs/Deployment.md). The live demo
+does not configure WooCommerce credentials or make an external business action.
 
 ## Final Bedrock Strands proof
 

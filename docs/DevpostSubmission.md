@@ -35,15 +35,18 @@ proposed message visible before a human decides what happens next.
   Haiku 4.5 run completed in `eu-north-1` after a recorded cost boundary and
   produced the fixed evidence → resolution → communications trace.
 - The local dashboard supports loading synthetic data, reviewing redacted
-  drafts, named approve/reject decisions, and an auditable dry-run handoff.
+  drafts, named approve/reject decisions, an auditable dry-run handoff, a
+  configurable bounded Policy Builder, and an optional read-only WooCommerce
+  order source.
 
 ## Safety and privacy
 
 The demo uses synthetic, reserved-domain data. Customer names and emails are
 excluded from specialist prompts; common email and phone patterns are redacted
-before drafts are persisted or displayed. No network client or external write
-adapter exists in the current demo. All outbound-shaped activity is a visible,
-idempotent dry-run preview after named approval.
+before drafts are persisted or displayed. The optional WooCommerce connector
+uses only HTTPS `GET` with server-side Read credentials and is unconfigured in
+the demo. No external write adapter exists. All outbound-shaped activity is a
+visible, idempotent dry-run preview after named approval.
 
 ## Testing instructions
 
@@ -60,6 +63,12 @@ Open `http://127.0.0.1:8000/` to load the synthetic queue and approve or reject
 a draft. The optional Bedrock proof is documented in
 [`BedrockProofRunbook.md`](BedrockProofRunbook.md); it uses only synthetic data
 and requires the evaluator's own AWS credentials and selected cost boundary.
+
+The live synthetic demo is available at
+[`https://oec.connect-the-dots.biz`](https://oec.connect-the-dots.biz). The
+dashboard shell is public, but operator and policy-editing access need separate
+tokens; do not put those values in a public README or video. The deployment
+guide explains their origin and secure administrator retrieval.
 
 ## Provenance and third-party tools
 

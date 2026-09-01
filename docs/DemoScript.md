@@ -28,11 +28,11 @@ or automated action authority.
 
 ## 1:15–1:45 — show the connector boundary
 
-Show the documented WooCommerce configuration and the **Read WooCommerce
-orders** control. State clearly that it is a read-only HTTPS GET connector with
-server-side Read credentials and explicit tracking metadata mapping. If an
-authorised staging integration was not run, leave it unconfigured and say so;
-the synthetic queue remains the truthful demo input.
+Show the documented WooCommerce configuration. State clearly that it is a
+read-only HTTPS GET connector with server-side Read credentials and explicit
+tracking metadata mapping. If an authorised staging integration was not run,
+leave it unconfigured and say so; the control remains unavailable and the
+synthetic queue is the truthful demo input.
 
 ## 1:45–2:25 — start and show the product
 
@@ -76,7 +76,9 @@ uv run order-exception-captain-backup --database data/video-demo.sqlite3 --outpu
 ```
 
 Mention that non-local binding requires an operator token, that the dashboard
-holds it only in memory, and that the deployment guide requires TLS and an
+holds it only in memory, and that the deployed demo's operator/admin tokens
+were generated on the VPS rather than supplied by AWS or WooCommerce. Do not
+show or say their values. The deployment guide requires TLS and an
 identity-aware proxy before real data.
 
 ## 4:35–5:00 — Strands, Bedrock, and honest close

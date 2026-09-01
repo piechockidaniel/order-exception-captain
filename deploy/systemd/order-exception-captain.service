@@ -1,0 +1,23 @@
+[Unit]
+Description=Order Exception Captain operator demo
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=oec
+Group=oec
+WorkingDirectory=/srv/order-exception-captain/current
+EnvironmentFile=/etc/order-exception-captain/oec.env
+ExecStart=/srv/order-exception-captain/current/.venv/bin/order-exception-captain-api --host 127.0.0.1 --port 8010 --database /var/lib/order-exception-captain/order-exception-captain.sqlite3
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=full
+ReadWritePaths=/var/lib/order-exception-captain
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

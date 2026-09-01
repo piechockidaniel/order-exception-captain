@@ -21,9 +21,9 @@ customer-message draft; and waits for a named human before any external action.
 | 2. Service and persistence | complete | HTTP API, SQLite incident/audit storage, idempotent scan, nine passing tests, and a local server smoke test. |
 | 3. Live Strands proof | complete | A native Bedrock Haiku 4.5 proof ran on 2026-08-30 UTC in `eu-north-1` after a non-secret preflight record. The synthetic stalled-order workflow completed evidence → resolution → communications with a 128-token limit per specialist and no external action. |
 | 4. Operator workflow | complete | Local dashboard passed a real browser approve/reject walkthrough, has PII minimisation/redaction, and includes a repeatable operator guide. |
-| 5. Safe integration | in progress | Browser-verified, approval-gated dry-run adapter generates one auditable handoff preview with no network client, credentials, or external side effect. The new bounded Policy Builder stores immutable rule versions and requires a separate admin token from operator access. A real staging-store validation remains an explicit decision gate. |
-| 6. Production readiness | in progress | Read-only file-snapshot and WooCommerce GET ingestion, scheduled scan commands, a privacy-safe activity feed, token-gated non-local access, verified SQLite backups, and a loopback-only container template preserve the manual API fallback. 49 tests pass. Hosting, telemetry, retention owner, restore cadence, and a user-authorised staging validation still need an operating decision. |
-| 7. Submission evidence | in progress | The public GitHub repository has a MIT license and README; the architecture diagram, five-minute script, Devpost description, checklist, and authorised live Strands proof are ready. Public video and Builder ID remain external submission steps. |
+| 5. Safe integration | in progress | Browser-verified, approval-gated dry-run adapter generates one auditable handoff preview with no external write. The optional WooCommerce connector is separately bounded to HTTPS GET with server-side Read credentials and remains unconfigured in the demo. The Policy Builder stores immutable rule versions and requires a separate admin token. A real staging-store validation remains an explicit decision gate. |
+| 6. Production readiness | in progress | The synthetic demo is live at `https://oec.connect-the-dots.biz` behind HTTPS, a token-protected operator/admin boundary, OpenLiteSpeed, and a verified SQLite backup. 49 tests pass. Telemetry, retention owner, restore cadence, and a user-authorised staging validation still need operating decisions. |
+| 7. Submission evidence | in progress | The public GitHub repository has a MIT license and README; the architecture diagram, five-minute script, Devpost description, live demo link, checklist, and authorised live Strands proof are ready. Public video and Builder ID remain external submission steps. |
 
 ## Active slice — safe integration
 
@@ -42,7 +42,8 @@ customer-message draft; and waits for a named human before any external action.
 - [x] Record privacy-safe scan successes and failures; show the latest result in the local dashboard and API.
 - [x] Require a token for non-local operator access and keep it only in dashboard memory.
 - [x] Add health checks, verified SQLite backup, and documented recovery procedure.
-- [ ] Select hosting, telemetry destination, retention owner, and restore-test cadence before connecting non-synthetic data.
+- [x] Select and deploy demo hosting: `https://oec.connect-the-dots.biz` runs the synthetic dashboard behind HTTPS, with server-generated operator/admin tokens and a verified SQLite backup.
+- [ ] Select telemetry destination, retention owner, and restore-test cadence before connecting non-synthetic data.
 
 ### Deferred live Bedrock decision
 
@@ -55,7 +56,7 @@ customer-message draft; and waits for a named human before any external action.
 - [x] Track every required submission item and distinguish finished evidence from external gates.
 - [x] Authorise and capture one live synthetic Strands-on-Bedrock trace with a selected model, region, and spend boundary. A non-secret preflight record and successful three-role trace were captured locally on 2026-08-30 UTC.
 - [ ] After that trace, decide whether an AgentCore deployment dry-run is justified as an optional technical-score upgrade; do not deploy without explicit approval.
-- [ ] Confirm publication permission, make the repository publicly verifiable, and record a public video.
+- [ ] Record and publish a public video that demonstrates the live dashboard and its synthetic workflow.
 - [ ] Register the final project with AWS Builder ID and submit before 2026-09-14 17:00 PDT.
 
 ### Acceptance criteria
