@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Protocol
 
 from .approvals import ApprovalService
+from .delivery_policy import DeliveryPolicyDocument, DeliveryPolicyDraft, default_delivery_policy
 from .domain import AuditEvent, AuditEventType, Incident, IncidentStatus, ScanActivity
 
 
@@ -44,6 +45,12 @@ class IncidentRepository(Protocol):
     def list_events(self, incident_id: str) -> list[AuditEvent]:
         """Return the ordered audit events for one incident."""
 
+    def get_active_policy(self) -> DeliveryPolicyDocument:
+        """Return the latest immutable delivery policy version."""
+
+    def publish_policy(self, draft: DeliveryPolicyDraft, published_by: str) -> DeliveryPolicyDocument:
+        """Append a new immutable policy version and make it active."""
+
 
 class SqliteIncidentRepository:
     """A small repository with database-enforced idempotency on incident ID."""
@@ -76,7 +83,10 @@ class SqliteIncidentRepository:
                     incident_id=incident.id,
                     event_type=AuditEventType.INCIDENT_DETECTED,
                     occurred_at=incident.created_at,
-                    detail="Deterministic delivery policy created an approval-gated draft.",
+                    detail=(
+                        f"Deterministic delivery policy version {incident.policy_version} matched "
+                        f"rule {incident.policy_rule_id or 'unknown'} and created an approval-gated draft."
+                    ),
                 ),
             )
             return True
@@ -244,6 +254,39 @@ class SqliteIncidentRepository:
             for row in rows
         ]
 
+    def get_active_policy(self) -> DeliveryPolicyDocument:
+        with self._connect() as connection:
+            row = connection.execute(
+                "SELECT document FROM delivery_policy_versions ORDER BY version DESC LIMIT 1"
+            ).fetchone()
+        if row is None:  # Defensive guard for an unexpectedly incomplete legacy database.
+            raise RuntimeError("The active delivery policy is unavailable.")
+        return DeliveryPolicyDocument.model_validate_json(row["document"])
+
+    def publish_policy(self, draft: DeliveryPolicyDraft, published_by: str) -> DeliveryPolicyDocument:
+        administrator = published_by.strip()
+        if not administrator:
+            raise ValueError("A named administrator is required to publish a policy.")
+        with self._connect() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            next_version = connection.execute(
+                "SELECT COALESCE(MAX(version), 0) + 1 AS next_version FROM delivery_policy_versions"
+            ).fetchone()["next_version"]
+            document = draft.versioned(version=next_version, published_by=administrator)
+            connection.execute(
+                """
+                INSERT INTO delivery_policy_versions (version, published_at, published_by, document)
+                VALUES (?, ?, ?, ?)
+                """,
+                (
+                    document.version,
+                    document.published_at.isoformat(),
+                    document.published_by,
+                    document.model_dump_json(),
+                ),
+            )
+            return document
+
     def _initialise_schema(self) -> None:
         with self._connect() as connection:
             connection.executescript(
@@ -275,8 +318,29 @@ class SqliteIncidentRepository:
                     detail TEXT NOT NULL
                 );
                 CREATE INDEX IF NOT EXISTS ix_scan_activity_occurred_at ON scan_activity(occurred_at DESC, id DESC);
+                CREATE TABLE IF NOT EXISTS delivery_policy_versions (
+                    version INTEGER PRIMARY KEY,
+                    published_at TEXT NOT NULL,
+                    published_by TEXT NOT NULL,
+                    document TEXT NOT NULL
+                );
                 """
             )
+            existing_policy = connection.execute("SELECT 1 FROM delivery_policy_versions LIMIT 1").fetchone()
+            if existing_policy is None:
+                document = default_delivery_policy()
+                connection.execute(
+                    """
+                    INSERT INTO delivery_policy_versions (version, published_at, published_by, document)
+                    VALUES (?, ?, ?, ?)
+                    """,
+                    (
+                        document.version,
+                        document.published_at.isoformat(),
+                        document.published_by,
+                        document.model_dump_json(),
+                    ),
+                )
 
     def _connect(self) -> sqlite3.Connection:
         connection = sqlite3.connect(self._database_path)

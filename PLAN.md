@@ -21,8 +21,8 @@ customer-message draft; and waits for a named human before any external action.
 | 2. Service and persistence | complete | HTTP API, SQLite incident/audit storage, idempotent scan, nine passing tests, and a local server smoke test. |
 | 3. Live Strands proof | complete | A native Bedrock Haiku 4.5 proof ran on 2026-08-30 UTC in `eu-north-1` after a non-secret preflight record. The synthetic stalled-order workflow completed evidence → resolution → communications with a 128-token limit per specialist and no external action. |
 | 4. Operator workflow | complete | Local dashboard passed a real browser approve/reject walkthrough, has PII minimisation/redaction, and includes a repeatable operator guide. |
-| 5. Safe integration | in progress | Browser-verified, approval-gated dry-run adapter generates one auditable handoff preview with no network client, credentials, or external side effect; the distributable wheel includes the operator dashboard. A real provider selection remains an explicit decision gate. |
-| 6. Production readiness | in progress | Read-only file-snapshot ingestion, scheduled scan command, a privacy-safe activity feed, token-gated non-local access, verified SQLite backups, and a loopback-only container template preserve the manual API fallback. 37 tests, wheel build, Compose validation, and a disposable container health check pass. The hosting, telemetry, retention owner, and restore cadence still need an operating decision. |
+| 5. Safe integration | in progress | Browser-verified, approval-gated dry-run adapter generates one auditable handoff preview with no network client, credentials, or external side effect. The new bounded Policy Builder stores immutable rule versions and requires a separate admin token from operator access. A real staging-store validation remains an explicit decision gate. |
+| 6. Production readiness | in progress | Read-only file-snapshot and WooCommerce GET ingestion, scheduled scan commands, a privacy-safe activity feed, token-gated non-local access, verified SQLite backups, and a loopback-only container template preserve the manual API fallback. 49 tests pass. Hosting, telemetry, retention owner, restore cadence, and a user-authorised staging validation still need an operating decision. |
 | 7. Submission evidence | in progress | The public GitHub repository has a MIT license and README; the architecture diagram, five-minute script, Devpost description, checklist, and authorised live Strands proof are ready. Public video and Builder ID remain external submission steps. |
 
 ## Active slice — safe integration
@@ -35,8 +35,10 @@ customer-message draft; and waits for a named human before any external action.
 - [x] Run an end-to-end browser review of the dry-run handoff.
 - [x] Fix the approval-dialog field-visibility regression and recheck it in a browser.
 - [x] Build a distributable wheel and verify it includes the operator dashboard assets.
-- [ ] Choose one real carrier or ecommerce adapter and obtain explicit authorisation before any non-dry-run implementation.
+- [ ] Validate the WooCommerce source against one user-authorised staging store and a Read-only key; do not use production credentials without a new approval.
 - [x] Add a read-only scheduled ingestion path with a manual scan fallback; do not let it trigger external writes.
+- [x] Add a versioned, declarative Policy Builder whose rule edits remain bounded, auditable, and separate from approval authority.
+- [x] Add a WooCommerce `wc/v3/orders` HTTPS GET source with environment-only Read credentials, explicit tracking metadata mapping, pagination, and customer-data minimisation.
 - [x] Record privacy-safe scan successes and failures; show the latest result in the local dashboard and API.
 - [x] Require a token for non-local operator access and keep it only in dashboard memory.
 - [x] Add health checks, verified SQLite backup, and documented recovery procedure.

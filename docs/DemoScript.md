@@ -1,8 +1,9 @@
 # Five-minute demo script
 
 This is a truthful recording outline, not a claim that an external action was
-performed. Keep the recording under five minutes and use only the synthetic
-orders shipped with the repository.
+performed. Keep the recording under five minutes. Use only the synthetic orders
+shipped with the repository unless an authorised staging WooCommerce scan has
+been separately validated and recorded.
 
 ## 0:00–0:30 — problem and audience
 
@@ -15,7 +16,25 @@ control of every consequence.”
 Show the architecture diagram. Point to the deterministic policy and the
 approval boundary.
 
-## 0:30–1:15 — start and show the product
+## 0:30–1:15 — configure the deterministic policy
+
+Open **Policy Builder** and show the active version-one rules. Change the
+stalled tracking threshold in a draft, use **Test draft with synthetic order**,
+and explain that the test does not publish the change or call any external
+service. Publish only if you want the next synthetic scan to use the revised
+policy, then point to the immutable version number. Emphasise that administrators
+can configure bounded business rules, but cannot add code, prompts, webhooks,
+or automated action authority.
+
+## 1:15–1:45 — show the connector boundary
+
+Show the documented WooCommerce configuration and the **Read WooCommerce
+orders** control. State clearly that it is a read-only HTTPS GET connector with
+server-side Read credentials and explicit tracking metadata mapping. If an
+authorised staging integration was not run, leave it unconfigured and say so;
+the synthetic queue remains the truthful demo input.
+
+## 1:45–2:25 — start and show the product
 
 Start the local API with a fresh database, then open the dashboard:
 
@@ -28,27 +47,27 @@ Show the empty dashboard, then select **Load demo queue**. Say that the queue
 contains only reserved-domain synthetic data and that the screen shows the
 latest aggregate scan result.
 
-## 1:15–2:15 — explain one deterministic incident
+## 2:25–3:10 — explain one deterministic incident
 
 Open `order-1042`. Show the policy trigger, evidence, selected carrier
 escalation draft, and customer-message draft. Explain that the coordinator—not
 the language model—selected this route because tracking is stalled after the
 promised date.
 
-## 2:15–3:00 — human approval and auditable dry run
+## 3:10–3:45 — human approval and auditable dry run
 
 Approve the draft with a demo operator name. Show the new audit event, then
 choose **Prepare dry-run handoff**. Point to `external_request_sent=false` and
 the audit message stating that no request was sent. This is the safety claim:
 the application is useful before it has permission to act externally.
 
-## 3:00–3:35 — show human rejection
+## 3:45–4:10 — show human rejection
 
 Open `order-1044`, choose **Reject draft**, enter a concise reason, and show
 that the approval path is closed and the rejection is recorded. This makes the
 human decision visible rather than a vague promise.
 
-## 3:35–4:25 — show operational safeguards
+## 4:10–4:35 — show operational safeguards
 
 Briefly show the scan activity, then run a verified backup:
 
@@ -60,7 +79,7 @@ Mention that non-local binding requires an operator token, that the dashboard
 holds it only in memory, and that the deployment guide requires TLS and an
 identity-aware proxy before real data.
 
-## 4:25–5:00 — Strands, Bedrock, and honest close
+## 4:35–5:00 — Strands, Bedrock, and honest close
 
 Show `strands_runtime.py` and the bounded evidence, resolution, and
 communications roles. Show the preflight record configured for Amazon Bedrock,

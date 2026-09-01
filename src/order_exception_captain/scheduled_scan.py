@@ -14,7 +14,7 @@ from .domain import ScanActivity, ScanActivityStatus
 from .order_source import JsonOrderFileSource, OrderSource, OrderSourceError
 from .persistence import SqliteIncidentRepository
 from .scanning import IncidentScanService, ScanResult
-from .workflow import DeterministicCoordinator, TemplateSpecialistRunner
+from .workflow import DeliveryExceptionPolicy, DeterministicCoordinator, TemplateSpecialistRunner
 
 
 class ScheduledScanRecord(BaseModel):
@@ -29,11 +29,16 @@ class ReadOnlyScheduledScan:
     """Loads an order snapshot and creates only approval-gated local incidents."""
 
     def __init__(
-        self, source: OrderSource, scanner: IncidentScanService, activity_repository: SqliteIncidentRepository
+        self,
+        source: OrderSource,
+        scanner: IncidentScanService,
+        activity_repository: SqliteIncidentRepository,
+        mode: str = "read_only_scheduled_scan",
     ) -> None:
         self._source = source
         self._scanner = scanner
         self._activity_repository = activity_repository
+        self._mode = mode
 
     def run_once(self) -> ScheduledScanRecord:
         occurred_at = datetime.now(timezone.utc)
@@ -44,7 +49,7 @@ class ReadOnlyScheduledScan:
             self._activity_repository.record_scan_activity(
                 ScanActivity(
                     occurred_at=occurred_at,
-                    mode="read_only_scheduled_scan",
+                    mode=self._mode,
                     status=ScanActivityStatus.FAILED,
                     detail=str(error),
                 )
@@ -54,7 +59,7 @@ class ReadOnlyScheduledScan:
         self._activity_repository.record_scan_activity(
             ScanActivity(
                 occurred_at=occurred_at,
-                mode="read_only_scheduled_scan",
+                mode=self._mode,
                 status=ScanActivityStatus.SUCCEEDED,
                 scanned_orders=scan.scanned_orders,
                 new_incident_count=len(scan.new_incident_ids),
@@ -62,13 +67,19 @@ class ReadOnlyScheduledScan:
                 detail="Read-only source scan completed; no external action was attempted.",
             )
         )
-        return ScheduledScanRecord(occurred_at=occurred_at, scan=scan)
+        return ScheduledScanRecord(occurred_at=occurred_at, mode=self._mode, scan=scan)
 
 
 def _build_job(order_path: Path, database_path: Path) -> ReadOnlyScheduledScan:
     source = JsonOrderFileSource(order_path)
     repository = SqliteIncidentRepository(database_path)
-    scanner = IncidentScanService(DeterministicCoordinator(TemplateSpecialistRunner()), repository)
+    scanner = IncidentScanService(
+        lambda: DeterministicCoordinator(
+            TemplateSpecialistRunner(),
+            policy=DeliveryExceptionPolicy(repository.get_active_policy()),
+        ),
+        repository,
+    )
     return ReadOnlyScheduledScan(source, scanner, repository)
 
 

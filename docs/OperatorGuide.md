@@ -44,6 +44,55 @@ All data in this walkthrough is synthetic. Before connecting a real store, use
 the data-minimisation controls documented in the architecture and obtain
 explicit authorisation for the selected integration.
 
+## Configure delivery rules safely
+
+Open **Policy Builder** to see the active, versioned rules. In the open local
+demo you can add, remove, or change a rule, test the draft against a synthetic
+stalled order, and publish it as a new immutable version. The change affects
+future scans only; it does not alter existing incidents or remove the approval
+gate.
+
+For a non-local desk, set a separate administrator token in the host secret
+store before starting the API:
+
+```powershell
+$env:OEC_OPERATOR_TOKEN = "<operator-secret-held-outside-the-repository>"
+$env:OEC_ADMIN_TOKEN = "<different-admin-secret-held-outside-the-repository>"
+```
+
+Unlock the operator desk first, then unlock the policy builder with the admin
+token. The two credentials have different authority: an operator can review,
+approve, or reject drafts but cannot publish policy.
+
+## Connect an authorised WooCommerce staging store
+
+Create a WooCommerce REST API key with **Read** permission for a service user;
+do not reuse an owner credential and do not put the key in the browser. Configure
+the server environment, using the metadata names from the tracking plugin on
+that staging store:
+
+```powershell
+$env:OEC_WOO_BASE_URL = "https://staging-shop.example"
+$env:OEC_WOO_CONSUMER_KEY = "<read-only-key>"
+$env:OEC_WOO_CONSUMER_SECRET = "<read-only-secret>"
+$env:OEC_WOO_TRACKING_STATUS_METADATA_KEY = "_tracking_status"
+$env:OEC_WOO_TRACKING_UPDATED_AT_METADATA_KEY = "_tracking_updated_at"
+$env:OEC_WOO_PROMISED_DELIVERY_DATE_METADATA_KEY = "_promised_delivery_date"
+```
+
+Restart the API, unlock the policy builder, and choose **Read WooCommerce
+orders**. The source makes HTTPS `GET` requests only and skips records without
+the three required tracking fields. It creates local approval-gated incidents;
+it never changes WooCommerce, the carrier, a customer, or a payment record.
+For a terminal preflight, use:
+
+```powershell
+uv run order-exception-captain-scan-woocommerce --database data/woocommerce-staging.sqlite3 --once
+```
+
+Use a staging store first and obtain a new explicit approval before any
+production-store validation.
+
 ## Run a read-only scheduled demo scan
 
 In a second local terminal, run the example snapshot once:

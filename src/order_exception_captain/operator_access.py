@@ -47,6 +47,36 @@ class OperatorAccess:
         return bool(separator) and scheme.lower() == "bearer" and compare_digest(presented_token, self.token or "")
 
 
+@dataclass(frozen=True)
+class AdminAccess:
+    """Separate configuration authority; an operator token alone can never publish policy."""
+
+    token: str | None = field(default=None, repr=False)
+
+    @property
+    def is_enabled(self) -> bool:
+        return self.token is not None
+
+    @classmethod
+    def from_token(cls, token: str | None) -> "AdminAccess":
+        normalised = (token or "").strip()
+        if not normalised:
+            return cls()
+        if len(normalised) < 16:
+            raise OperatorAccessConfigurationError("OEC_ADMIN_TOKEN must contain at least 16 characters.")
+        return cls(token=normalised)
+
+    @classmethod
+    def from_environment(cls, environment: Mapping[str, str] | None = None) -> "AdminAccess":
+        values = os.environ if environment is None else environment
+        return cls.from_token(values.get("OEC_ADMIN_TOKEN"))
+
+    def authorizes(self, presented_token: str | None) -> bool:
+        if not self.is_enabled or presented_token is None:
+            return False
+        return compare_digest(presented_token.strip(), self.token or "")
+
+
 def is_loopback_host(host: str) -> bool:
     """Return true for an IPv4/IPv6 loopback address or localhost."""
     normalised = host.strip().lower()

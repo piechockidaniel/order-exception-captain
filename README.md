@@ -23,6 +23,54 @@ date, the application:
 
 Lost parcels and failed delivery attempts follow different explicit routes.
 
+## Policy Builder and read-only WooCommerce source
+
+The dashboard now exposes the active rule pack to every operator and, in local
+mode, lets an administrator publish a new immutable policy version. A rule can
+only express a priority, carrier status, optional tracking-age threshold,
+optional promise-date condition, operator-visible reason, and proposed
+resolution. It cannot contain executable code, a prompt, a webhook, or an
+external action. Each incident retains the policy version and matching rule ID
+that created it.
+
+On a protected service, configure a distinct 16+-character `OEC_ADMIN_TOKEN`.
+An operator token alone cannot test or publish policy. The page holds both
+tokens only in memory.
+
+The optional WooCommerce source calls only `GET /wp-json/wc/v3/orders` over
+HTTPS and paginates using WooCommerce's response headers. Create a WooCommerce
+REST API key with **Read** access, keep its values in the host secret store,
+and configure these server-side environment variables:
+
+```powershell
+$env:OEC_WOO_BASE_URL = "https://staging-shop.example"
+$env:OEC_WOO_CONSUMER_KEY = "<read-only-consumer-key>"
+$env:OEC_WOO_CONSUMER_SECRET = "<read-only-consumer-secret>"
+```
+
+Tracking is not a standard WooCommerce field, so the source requires three
+configured metadata fields: carrier status, tracking update time, and promised
+delivery date. The defaults are `_tracking_status`, `_tracking_updated_at`, and
+`_promised_delivery_date`; set the matching `OEC_WOO_*_METADATA_KEY`
+environment variables if a chosen tracking plugin uses different names. Orders
+without all three fields are skipped rather than guessed. Customer identity is
+replaced with a synthetic placeholder before deterministic triage and is never
+persisted or sent to a specialist.
+
+After server-side configuration, an administrator can choose **Read
+WooCommerce orders** in the dashboard, or run one explicit read-only scan:
+
+```powershell
+uv run order-exception-captain-scan-woocommerce --database data/woocommerce-demo.sqlite3 --once
+```
+
+The connector has no POST, PUT, PATCH, or DELETE operation. Start against a
+user-authorised staging store and a read-only key; do not use a production
+store without a separate privacy and operational review. See WooCommerce's
+[REST API guide](https://developer.woocommerce.com/docs/apis/rest-api/) and
+[authentication guide](https://developer.woocommerce.com/docs/apis/rest-api/authentication)
+for key creation and permissions.
+
 ## Quick start
 
 Requires Python 3.11+ and [uv](https://docs.astral.sh/uv/).
@@ -144,6 +192,10 @@ final video.
 - No refund, replacement, cancellation or customer message is sent by the
   current code.
 - A non-local API binding cannot start without an operator access token.
+- Policy publication needs a separate administrator token when the operator
+  desk is protected; an operator token never grants policy-editing authority.
+- The WooCommerce connector is read-only and needs explicit server-side
+  configuration; it is not enabled by the synthetic demo.
 
 ## Architecture and delivery plan
 

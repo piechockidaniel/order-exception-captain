@@ -28,7 +28,8 @@ turns them into evidence-backed action drafts.
 3. **Live Strands proof.** Configure an AWS Bedrock-backed Strands runner,
    preserve the fixed routing sequence, and record actual tool/agent traces.
 4. **Operator experience.** Add the explicit approve/reject flow, a redacted
-   event history and one concrete external adapter in dry-run first.
+   event history, versioned policy builder, and a read-only WooCommerce source;
+   keep every write-shaped adapter in dry-run first.
 5. **Submission evidence.** Deploy a testable demo (prefer AgentCore), create
    the architecture diagram, record a <=5 minute public video, and publish the
    repository, README and setup instructions.

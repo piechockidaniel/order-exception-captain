@@ -11,7 +11,8 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Protocol
 
-from .domain import CarrierStatus, DraftAction, Incident, IncidentStatus, Order, ResolutionKind
+from .delivery_policy import DeliveryPolicyDocument, default_delivery_policy
+from .domain import DraftAction, Incident, IncidentStatus, Order, ResolutionKind
 from .redaction import redact_text
 
 
@@ -24,22 +25,37 @@ class SpecialistRunner(Protocol):
 class Route:
     reason: str
     resolution: ResolutionKind
+    policy_version: int
+    policy_rule_id: str
 
 
 class DeliveryExceptionPolicy:
     """Pure, testable policy. No model output influences this decision."""
 
+    def __init__(self, document: DeliveryPolicyDocument | None = None) -> None:
+        self._document = document or default_delivery_policy()
+
+    @property
+    def document(self) -> DeliveryPolicyDocument:
+        return self._document
+
     def route(self, order: Order, now: datetime) -> Route | None:
-        if order.carrier_status is CarrierStatus.LOST:
-            return Route("carrier marked the parcel as lost", ResolutionKind.REPLACEMENT)
-        if order.carrier_status is CarrierStatus.DELIVERY_ATTEMPT_FAILED:
-            return Route("carrier needs a confirmed delivery address", ResolutionKind.ADDRESS_CONFIRMATION)
-        if (
-            order.carrier_status is CarrierStatus.STALLED
-            and order.hours_without_tracking_update >= 48
-            and order.promised_delivery_date <= now
-        ):
-            return Route("tracking has been stalled for at least 48 hours after the promise date", ResolutionKind.CARRIER_ESCALATION)
+        for rule in sorted(self._document.rules, key=lambda item: item.priority):
+            if order.carrier_status != rule.carrier_status:
+                continue
+            if (
+                rule.minimum_hours_without_tracking_update is not None
+                and order.hours_without_tracking_update < rule.minimum_hours_without_tracking_update
+            ):
+                continue
+            if rule.requires_promised_delivery_date_past and order.promised_delivery_date > now:
+                continue
+            return Route(
+                reason=rule.reason,
+                resolution=rule.resolution,
+                policy_version=self._document.version,
+                policy_rule_id=rule.id,
+            )
         return None
 
 
@@ -77,6 +93,8 @@ class DeterministicCoordinator:
             policy_summary=policy_summary,
             customer_message_draft=customer_message,
             drafts=[draft],
+            policy_version=route.policy_version,
+            policy_rule_id=route.policy_rule_id,
         )
 
     @staticmethod

@@ -7,7 +7,7 @@ Track: **Professional Agents**. Current official deadline: **September 14,
 |---|---|---|
 | New project created during submission period | complete | New repository; provenance is documented in the README. |
 | Strands Agents SDK and Amazon Bedrock incorporated | complete | The bounded Bedrock Haiku 4.5 trace completed on synthetic data in `eu-north-1` after a non-secret preflight. The fixed evidence → resolution → communications sequence produced no external action. |
-| Works consistently as depicted | in progress | 38 automated tests pass. Rebuild the wheel, verify the container, and record the final video against this source revision. |
+| Works consistently as depicted | in progress | 49 automated tests pass, including versioned-policy and read-only WooCommerce-source coverage. Rebuild the wheel, verify the container, and record the final video against this source revision. |
 | Public repository with visible MIT/Apache license and README | complete | Anonymous GitHub lookup confirms the public repository, visible MIT license, and README. |
 | Architecture diagram | complete | Mermaid diagram in `docs/Architecture.md`. |
 | English text description and testing instructions | complete | Copy-ready [Devpost submission text](DevpostSubmission.md), README, and demo script are in English. |

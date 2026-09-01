@@ -18,7 +18,10 @@
         <div class="topbar-actions">
           <span class="local-badge">Local demo · no external actions</span>
           <span id="access-status" class="local-badge" hidden></span>
+          <span id="admin-status" class="local-badge" hidden></span>
           <button id="unlock-button" class="button secondary" type="button" hidden>Unlock operator desk</button>
+          <button id="admin-unlock-button" class="button secondary" type="button" hidden>Unlock policy builder</button>
+          <button id="woocommerce-scan-button" class="button secondary" type="button" hidden>Read WooCommerce orders</button>
           <button id="refresh-button" class="button secondary" type="button">Refresh</button>
           <button id="demo-button" class="button primary" type="button">Load demo queue</button>
         </div>
@@ -42,6 +45,37 @@
         <article><span>Approved</span><strong id="approved-count">0</strong></article>
         <article><span>Rejected</span><strong id="rejected-count">0</strong></article>
         <article><span>Total cases</span><strong id="total-count">0</strong></article>
+      </section>
+
+      <section id="policy-builder" class="policy-builder" aria-labelledby="policy-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Policy Builder</p>
+            <h2 id="policy-heading">Versioned delivery rules</h2>
+          </div>
+          <span id="policy-version" class="muted">Loading policy…</span>
+        </div>
+        <p id="policy-summary" class="policy-summary">The active policy is loading.</p>
+        <p id="policy-access-note" class="activity-note"></p>
+        <form id="policy-form" class="policy-form" hidden>
+          <div class="policy-form-grid">
+            <label>
+              Policy name
+              <input id="policy-name" name="policy-name" maxlength="120" required>
+            </label>
+            <label>
+              Administrator name
+              <input id="policy-administrator" name="policy-administrator" maxlength="120" required>
+            </label>
+          </div>
+          <div id="policy-rules" class="policy-rules"></div>
+          <div class="policy-actions">
+            <button id="add-policy-rule" class="button secondary" type="button">Add rule</button>
+            <button id="simulate-policy" class="button secondary" type="button">Test draft with synthetic order</button>
+            <button id="publish-policy" class="button primary" type="submit">Publish new policy version</button>
+          </div>
+        </form>
+        <p id="policy-message" class="form-error" role="alert"></p>
       </section>
 
       <section class="workbench" aria-label="Incident workbench">
@@ -100,6 +134,23 @@
         <div class="dialog-actions">
           <button id="cancel-access" class="button secondary" type="button">Cancel</button>
           <button id="confirm-access" class="button primary" type="submit">Unlock desk</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="admin-access-dialog" aria-labelledby="admin-access-title">
+      <form id="admin-access-form" method="dialog">
+        <p class="eyebrow">Protected policy builder</p>
+        <h2 id="admin-access-title">Enter administrator access token</h2>
+        <p class="dialog-summary">This separate token is held only for this open page. It is never stored in the browser.</p>
+        <label>
+          Administrator access token
+          <input id="admin-access-token" name="admin-token" type="password" autocomplete="off" maxlength="512" required>
+        </label>
+        <p id="admin-access-error" class="form-error" role="alert"></p>
+        <div class="dialog-actions">
+          <button id="cancel-admin-access" class="button secondary" type="button">Cancel</button>
+          <button id="confirm-admin-access" class="button primary" type="submit">Unlock policy builder</button>
         </div>
       </form>
     </dialog>

@@ -23,6 +23,7 @@ order-exception-captain = "order_exception_captain.app:main"
 order-exception-captain-api = "order_exception_captain.api:main"
 order-exception-captain-live = "order_exception_captain.live_demo:main"
 order-exception-captain-scan = "order_exception_captain.scheduled_scan:main"
+order-exception-captain-scan-woocommerce = "order_exception_captain.woocommerce_scan:main"
 order-exception-captain-backup = "order_exception_captain.backup:main"
 
 [build-system]

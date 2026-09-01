@@ -92,6 +92,8 @@ class Incident(BaseModel):
     policy_summary: str = ""
     customer_message_draft: str = ""
     drafts: list[DraftAction] = Field(default_factory=list)
+    policy_version: int = Field(default=1, ge=1)
+    policy_rule_id: str | None = None
 
 
 class AuditEvent(BaseModel):

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from datetime import datetime
 
 from pydantic import BaseModel, Field
@@ -20,15 +21,20 @@ class ScanResult(BaseModel):
 class IncidentScanService:
     """Makes repeat scans safe by relying on deterministic incident IDs and SQLite uniqueness."""
 
-    def __init__(self, coordinator: DeterministicCoordinator, repository: IncidentRepository) -> None:
+    def __init__(
+        self,
+        coordinator: DeterministicCoordinator | Callable[[], DeterministicCoordinator],
+        repository: IncidentRepository,
+    ) -> None:
         self._coordinator = coordinator
         self._repository = repository
 
     def scan(self, orders: list[Order], now: datetime | None = None) -> ScanResult:
+        coordinator = self._coordinator() if callable(self._coordinator) else self._coordinator
         new_incident_ids: list[str] = []
         existing_incident_ids: list[str] = []
         for order in orders:
-            incident = self._coordinator.triage(order, now)
+            incident = coordinator.triage(order, now)
             if incident is None:
                 continue
             if self._repository.save_if_new(incident):

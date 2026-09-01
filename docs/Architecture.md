@@ -2,7 +2,7 @@
 
 ```mermaid
 flowchart TD
-    A[Read-only order snapshot or manual scan] --> B{Deterministic delivery policy}
+    A[Read-only JSON snapshot, WooCommerce GET source, or manual scan] --> B{Deterministic delivery policy}
     B -->|Normal order| C[No incident]
     B -->|Stalled, lost, or failed delivery| D[Fixed specialist sequence]
     D --> E[Evidence explanation]
@@ -17,6 +17,9 @@ flowchart TD
     I --> M
     A --> N[Privacy-safe scan activity]
     N --> M
+    Q[Administrator] --> R[Policy Builder]
+    R --> S[(Immutable policy versions)]
+    S --> B
 
     subgraph Controlled AI assistance
       D
@@ -28,6 +31,8 @@ flowchart TD
     subgraph Guardrails
       O[Model cannot route, approve, or trigger a side effect]
       P[Non-local access requires operator token]
+      T[Policy changes need separate admin token]
+      U[WooCommerce connector only uses HTTPS GET]
     end
 ```
 
@@ -64,6 +69,23 @@ identity system. The approval name is still a human-entered audit declaration;
 a deployed instance should be placed behind TLS and an identity-aware proxy or
 SSO before it is used with non-synthetic data.
 
+The policy builder is a second boundary. It reads the active policy for
+operator transparency, but it publishes a new append-only SQLite policy
+version only with `OEC_ADMIN_TOKEN`. If the operator desk is token-protected
+and no admin token is configured, editing is disabled. Administrator access
+does not bypass the named-operator approval required for every drafted action.
+
+## Versioned declarative policy
+
+The active policy consists of ordered rules with a unique priority, carrier
+status, optional minimum tracking age, optional overdue promise-date check,
+operator-visible reason, and proposed `ResolutionKind`. The coordinator uses
+the first matching rule and records its version and rule ID on the incident.
+The shipped version one reproduces the original fixed routes exactly: lost →
+replacement, failed delivery attempt → address confirmation, and stalled for
+48+ hours after the promised date → carrier escalation. No policy field can
+define code, model instructions, an endpoint, or a side effect.
+
 ## Dry-run integration boundary
 
 `DryRunOutboundAdapter` is the first integration-shaped component. It has no
@@ -88,6 +110,23 @@ language is useful: evidence explanation and customer-facing draft wording.
 No agent is allowed to send a message, alter an order, issue a refund, or create
 a replacement. Those are future integration adapters that must require a named
 operator approval and produce an audit record.
+
+## Read-only WooCommerce ingestion
+
+`WooCommerceOrderSource` implements the same `OrderSource` contract. It uses
+the current `wc/v3/orders` endpoint over HTTPS, HTTP Basic authentication in an
+authorization header, and WooCommerce pagination headers. It has no methods or
+code paths for modifying a store. Consumer credentials remain in the process
+environment and never enter SQLite, activity records, browser responses, URLs,
+or model prompts.
+
+Because WooCommerce itself has no universal shipment-tracking schema, the
+source maps explicit metadata keys for status, last tracking update, promised
+delivery date, and optionally carrier. An incomplete or unsupported record is
+skipped instead of inventing tracking evidence. The source substitutes a
+synthetic customer identity before it creates the narrow `Order` domain object;
+only operational delivery fields reach triage. A real-store run remains a
+separate user-authorised staging validation, not a claim made by the demo.
 
 ## Strands and Bedrock use
 
