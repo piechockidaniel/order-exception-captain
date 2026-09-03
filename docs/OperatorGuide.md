@@ -1,7 +1,7 @@
 # Operator guide
 
-Order Exception Captain is a local review desk. It does not send customer
-messages, update an order, issue a replacement, or contact a carrier.
+ResolveDesk — Order Exception Captain is a local review desk. It does not send
+customer messages, update an order, issue a replacement, or contact a carrier.
 
 ## Start a clean, repeatable demo
 

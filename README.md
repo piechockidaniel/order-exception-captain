@@ -1,9 +1,9 @@
-# Order Exception Captain
+# ResolveDesk — Order Exception Captain
 
-Order Exception Captain is a new, focused **Professional Agent** project for
-independent ecommerce operators. It watches delivery status, detects a specific
-post-purchase exception, and creates an evidence-backed action draft for human
-approval.
+ResolveDesk is a new, focused **Professional Agent** project for independent
+ecommerce operators. Order Exception Captain is its delivery-exception product:
+it watches delivery status, detects a specific post-purchase exception, and
+creates an evidence-backed action draft for human approval.
 
 It does not try to be a generic agent platform. The coordinator is deliberately
 deterministic: carrier states and explicit thresholds decide which fixed pieces

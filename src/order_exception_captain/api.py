@@ -75,7 +75,7 @@ def create_app(
     admin_access = AdminAccess.from_token(admin_token)
 
     app = FastAPI(
-        title="Order Exception Captain",
+        title="ResolveDesk — Order Exception Captain",
         version="0.1.0",
         description="A deterministic delivery-exception service that creates approval-gated drafts only.",
     )
@@ -275,7 +275,7 @@ def _scan_source_and_record(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Run the Order Exception Captain API.")
+    parser = argparse.ArgumentParser(description="Run the ResolveDesk — Order Exception Captain API.")
     parser.add_argument("--database", default="data/order-exception-captain.sqlite3")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8000)

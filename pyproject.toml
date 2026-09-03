@@ -1,11 +1,11 @@
 [project]
 name = "order-exception-captain"
 version = "0.1.0"
-description = "A deterministic, approval-gated Strands workflow for ecommerce delivery exceptions."
+description = "ResolveDesk — a deterministic, approval-gated Strands workflow for ecommerce delivery exceptions."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { file = "LICENSE" }
-authors = [{ name = "Order Exception Captain contributors" }]
+authors = [{ name = "ResolveDesk contributors" }]
 dependencies = [
     "botocore[crt]>=1.43,<2",
     "email-validator>=2.2,<3",

@@ -1,4 +1,4 @@
-# Order Exception Captain — Devpost submission text
+# ResolveDesk — Order Exception Captain — Devpost submission text
 
 ## Tagline
 
@@ -8,9 +8,9 @@ evidence-backed operator drafts.
 ## What it does
 
 Independent ecommerce operators often discover a stalled, lost, or failed
-delivery only after a customer has already had a poor experience. Order
-Exception Captain turns that repetitive exception-handling work into one clear,
-reviewable workflow.
+delivery only after a customer has already had a poor experience. ResolveDesk —
+Order Exception Captain turns that repetitive exception-handling work into one
+clear, reviewable workflow.
 
 It reads a delivery-status snapshot, applies deterministic policy to identify a
 specific exception, then runs three bounded Strands specialists in a fixed

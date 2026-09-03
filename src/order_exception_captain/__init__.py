@@ -1,4 +1,4 @@
-"""Order Exception Captain: deterministic ecommerce incident orchestration."""
+"""ResolveDesk — Order Exception Captain: deterministic ecommerce incident orchestration."""
 
 from .domain import Incident, IncidentStatus, Order
 from .workflow import DeterministicCoordinator, TemplateSpecialistRunner

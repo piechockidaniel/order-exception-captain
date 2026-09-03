@@ -1,4 +1,4 @@
-# Bedrock proof runbook
+# ResolveDesk — Order Exception Captain Bedrock proof runbook
 
 Use this runbook only for the final, synthetic Strands-on-Bedrock proof. It is
 not a production deployment guide and it must never be used with real customer,

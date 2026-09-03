@@ -5,9 +5,10 @@ This document records the initial delivery strategy and submission definition.
 
 ## Goal
 
-Build a new Professional Agents submission for independent ecommerce operators:
-an autonomous, approval-gated assistant that identifies delivery exceptions and
-turns them into evidence-backed action drafts.
+Build ResolveDesk — Order Exception Captain, a new Professional Agents
+submission for independent ecommerce operators: an autonomous, approval-gated
+assistant that identifies delivery exceptions and turns them into
+evidence-backed action drafts.
 
 ## Definition of a successful demo
 

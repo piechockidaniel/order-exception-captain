@@ -1,4 +1,4 @@
-# Deployment and recovery guide
+# ResolveDesk — Order Exception Captain deployment and recovery guide
 
 This guide prepares an isolated operator demo. It is not authorisation to
 connect a store, carrier, payment provider, or customer-messaging system.
@@ -37,7 +37,7 @@ public or connect an external system.
 
 ## Live VPS demo
 
-The current synthetic demo is served at
+The current ResolveDesk — Order Exception Captain synthetic demo is served at
 [`https://oec.connect-the-dots.biz`](https://oec.connect-the-dots.biz). It is
 an intentionally small native deployment, not an AgentCore deployment:
 

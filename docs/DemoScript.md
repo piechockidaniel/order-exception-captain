@@ -8,10 +8,10 @@ been separately validated and recorded.
 ## 0:00–0:30 — problem and audience
 
 “Independent ecommerce operators lose time discovering delivery failures,
-checking carrier evidence, and writing customer updates. Order Exception
-Captain is a Professional Agent for that narrow post-purchase workflow. It
-turns a delivery exception into an explainable draft, but a human stays in
-control of every consequence.”
+checking carrier evidence, and writing customer updates. ResolveDesk — Order
+Exception Captain is a Professional Agent for that narrow post-purchase
+workflow. It turns a delivery exception into an explainable draft, but a human
+stays in control of every consequence.”
 
 Show the architecture diagram. Point to the deterministic policy and the
 approval boundary.
@@ -90,6 +90,6 @@ a fresh paid call, obtain explicit approval before running the live smoke test.
 Do not represent the offline template runner as a live model invocation or
 imply that Bedrock selected a resolution.
 
-Close with: “Order Exception Captain narrows an ambiguous delivery problem into
-a repeatable, reviewable decision—without allowing an agent to silently send,
+Close with: “ResolveDesk narrows an ambiguous delivery problem into a
+repeatable, reviewable decision—without allowing an agent to silently send,
 refund, replace, or purchase anything.”

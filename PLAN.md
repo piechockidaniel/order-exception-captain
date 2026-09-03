@@ -1,11 +1,11 @@
-# Order Exception Captain — editable delivery plan
+# ResolveDesk — Order Exception Captain — editable delivery plan
 
 **Status legend:** `complete` · `in progress` · `next` · `blocked` · `not started`
 
-This is the living plan for the project. Update the status, evidence, and next
-action when a milestone materially changes. Keep the scope narrow: this is a
-post-purchase delivery-exception assistant, not a generic agent platform and
-not a replenishment system.
+This is the living plan for ResolveDesk, the Order Exception Captain product.
+Update the status, evidence, and next action when a milestone materially
+changes. Keep the scope narrow: this is a post-purchase delivery-exception
+assistant, not a generic agent platform and not a replenishment system.
 
 ## Outcome
 

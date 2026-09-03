@@ -1,4 +1,4 @@
-# Agents for Humans submission checklist
+# ResolveDesk — Order Exception Captain — Agents for Humans submission checklist
 
 Track: **Professional Agents**. Current official deadline: **September 14,
 2026, 5:00pm PDT**. Verify the rules again immediately before submitting.

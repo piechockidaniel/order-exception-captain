@@ -117,7 +117,7 @@ def test_local_dashboard_loads_and_synthetic_demo_scan_is_idempotent(tmp_path) -
     second_scan = client.post("/demo/scan")
 
     assert dashboard.status_code == 200
-    assert "Order Exception Captain" in dashboard.text
+    assert "ResolveDesk — Order Exception Captain" in dashboard.text
     assert client.get("/assets/app.js").status_code == 200
     assert first_scan.json()["new_incident_ids"] == [
         "delivery-order-1042-stalled",
