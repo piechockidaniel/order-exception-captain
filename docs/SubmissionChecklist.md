@@ -7,8 +7,8 @@ Track: **Professional Agents**. Current official deadline: **September 14,
 |---|---|---|
 | New project created during submission period | complete | New repository; provenance is documented in the README. |
 | Strands Agents SDK and Amazon Bedrock incorporated | complete | The bounded Bedrock Haiku 4.5 trace completed on synthetic data in `eu-north-1` after a non-secret preflight. The fixed evidence → resolution → communications sequence produced no external action. |
-| Works consistently as depicted | complete for the synthetic demo | Verified on 2026-09-03: the 49-case automated suite exited successfully, `uv build` succeeded with all dashboard assets, a fresh scheduled scan created one incident, and its backup passed SQLite integrity. The live VPS returned `200` for the public shell and health endpoint; anonymous incident access returned `401`. |
-| Public repository with visible MIT/Apache license and README | in progress | Anonymous GitHub lookup confirms the repository is public and visibly MIT-licensed with a README. Public `main` is still `89db9f8`; obtain explicit confirmation before pushing local commit `9dc6520` and the current verification update. |
+| Works consistently as depicted | complete for the synthetic demo | Verified on 2026-09-03: the 49-case automated suite exited successfully, `uv build` succeeded with all dashboard assets, a fresh scheduled scan created one incident, and its backup passed SQLite integrity. Release `3a24f88` is live on the VPS: the public shell and health endpoint return `200`, while anonymous incident access returns `401`. |
+| Public repository with visible MIT/Apache license and README | complete | Anonymous GitHub lookup confirms the repository is public and visibly MIT-licensed with a README. Public `main` was pushed and verified at `3a24f88` on 2026-09-03. |
 | Architecture diagram | complete | Mermaid diagram in `docs/Architecture.md`. |
 | English text description and testing instructions | complete | Copy-ready [Devpost submission text](DevpostSubmission.md), README, and demo script are in English. |
 | Public video, maximum five minutes | ready to record | `docs/DemoScript.md`; upload to public YouTube or Vimeo. Show the non-secret recorded Bedrock trace if available; a new paid invocation is only needed if you choose to make one and explicitly approve it. |
@@ -19,10 +19,8 @@ Track: **Professional Agents**. Current official deadline: **September 14,
 
 ## Before submitting
 
-1. Obtain explicit confirmation before pushing the local submission/deployment documentation commits to public GitHub.
-2. After the push, verify anonymous access to the current README, MIT license, and submission materials.
-3. Record the video using the script; keep it under five minutes and publish it.
-4. Complete Devpost fields in English, including the code URL, diagram, video,
+1. Record the video using the script; keep it under five minutes and publish it.
+2. Complete Devpost fields in English, including the code URL, diagram, video,
    Builder ID, and testing instructions.
 
 The live Bedrock trace has already been captured on synthetic data. Re-run the

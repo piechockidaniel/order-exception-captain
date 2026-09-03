@@ -51,7 +51,8 @@ an intentionally small native deployment, not an AgentCore deployment:
 
 The corresponding server templates are versioned under
 [`deploy/`](../deploy/). The live instance is running release
-`89db9f890c42f458cb28b6143e8689bb21d26103`.
+`3a24f88d51e74a8c49f2c1928a64d5aa0908c4a2`, deployed and verified on
+2026-09-03.
 
 ### Token origin and handling
 
