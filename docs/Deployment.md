@@ -50,9 +50,10 @@ an intentionally small native deployment, not an AgentCore deployment:
   graceful reload after renewal.
 
 The corresponding server templates are versioned under
-[`deploy/`](../deploy/). The live instance is running release
-`3a24f88d51e74a8c49f2c1928a64d5aa0908c4a2`, deployed and verified on
-2026-09-03.
+[`deploy/`](../deploy/). The live instance is running the ResolveDesk visual
+release `bea6a60d8f5e1c309d194c6d1e3b3a8ab45bdc64`, deployed and verified on
+2026-09-04. Its virtual host disables inherited private HTML caching so a
+subsequent dashboard release cannot leave an earlier page shell public.
 
 ### Token origin and handling
 

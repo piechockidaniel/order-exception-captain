@@ -22,8 +22,8 @@ customer-message draft; and waits for a named human before any external action.
 | 3. Live Strands proof | complete | A native Bedrock Haiku 4.5 proof ran on 2026-08-30 UTC in `eu-north-1` after a non-secret preflight record. The synthetic stalled-order workflow completed evidence → resolution → communications with a 128-token limit per specialist and no external action. |
 | 4. Operator workflow | complete | Local dashboard passed a real browser approve/reject walkthrough, has PII minimisation/redaction, and includes a repeatable operator guide. |
 | 5. Safe integration | in progress | Browser-verified, approval-gated dry-run adapter generates one auditable handoff preview with no external write. The optional WooCommerce connector is separately bounded to HTTPS GET with server-side Read credentials and remains unconfigured in the demo. The Policy Builder stores immutable rule versions and requires a separate admin token. A real staging-store validation remains an explicit decision gate. |
-| 6. Production readiness | in progress | The synthetic demo is live at `https://oec.connect-the-dots.biz` behind HTTPS, a token-protected operator/admin boundary, OpenLiteSpeed, and a verified SQLite backup. Release `3a24f88` was deployed and independently verified on 2026-09-03. Telemetry, retention owner, restore cadence, and a user-authorised staging validation still need operating decisions before non-synthetic data. |
-| 7. Submission evidence | in progress | Public GitHub `main` contains the reviewed runtime release `3a24f88` and its deployment record; the synthetic VPS is running `3a24f88`. The architecture diagram, five-minute script, Devpost description, live demo, and authorised live Strands proof are ready. The only required external steps are the public video, Builder ID, and Devpost form. |
+| 6. Production readiness | in progress | The synthetic demo is live at `https://oec.connect-the-dots.biz` behind HTTPS, a token-protected operator/admin boundary, OpenLiteSpeed, and a verified SQLite backup. ResolveDesk release `bea6a60` was deployed and independently verified on 2026-09-04; the virtual host now disables inherited private HTML caching so future dashboard releases are not served stale. Telemetry, retention owner, restore cadence, and a user-authorised staging validation still need operating decisions before non-synthetic data. |
+| 7. Submission evidence | in progress | Public GitHub `main` contains the reviewed ResolveDesk runtime release `bea6a60` and its deployment record; the synthetic VPS is running `bea6a60`. The architecture diagram, five-minute script, Devpost description, live demo, and authorised live Strands proof are ready. The only required external steps are the public video, Builder ID, and Devpost form. |
 
 ## Active slice — safe integration
 
@@ -56,7 +56,7 @@ customer-message draft; and waits for a named human before any external action.
 - [x] Track every required submission item and distinguish finished evidence from external gates.
 - [x] Authorise and capture one live synthetic Strands-on-Bedrock trace with a selected model, region, and spend boundary. A non-secret preflight record and successful three-role trace were captured locally on 2026-08-30 UTC.
 - [x] Re-verify the current official rules, public GitHub visibility and MIT license, current local test suite, wheel assets, scheduled-scan/backup path, and public live-demo access on 2026-09-03.
-- [x] Push the reviewed submission/deployment documentation commits to public GitHub `main` after explicit confirmation; `origin/main` reached `3a24f88` on 2026-09-03.
+- [x] Push the reviewed ResolveDesk visual release and deployment documentation to public GitHub `main` after explicit confirmation; `origin/main` reached `bea6a60` on 2026-09-04.
 - [ ] Record and publish a public video that demonstrates the live dashboard and its synthetic workflow.
 - [ ] Register the final project with AWS Builder ID and submit before 2026-09-14 17:00 PDT.
 
@@ -93,7 +93,7 @@ customer-message draft; and waits for a named human before any external action.
 | AgentCore deployment expands the scope and AWS footprint. | First secure a successful local Bedrock trace. Treat AgentCore as a separately approved, optional score-strengthening deployment. |
 | A real-store integration creates customer or financial risk. | Start with a dry-run adapter and retain explicit approval as a hard gate. |
 | Scope overlaps Restock Room. | Do not add stock replenishment, supplier ordering, or purchasing. |
-| Submission material or the live demo becomes stale before judging. | Public GitHub `main` contains the reviewed runtime release `3a24f88`, and the live synthetic VPS runs that same release. Re-run the quick public checks after any later change and before Devpost submission. |
+| Submission material or the live demo becomes stale before judging. | Public GitHub `main` contains the reviewed ResolveDesk runtime release `bea6a60`, and the live synthetic VPS runs that same release. The virtual host's inherited private HTML cache is disabled; re-run the quick public checks after any later change and before Devpost submission. |
 
 ## API-funded development continuity
 
