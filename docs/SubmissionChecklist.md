@@ -7,26 +7,30 @@ Track: **Professional Agents**. Current official deadline: **September 14,
 |---|---|---|
 | New project created during submission period | complete | New repository; provenance is documented in the README. |
 | Strands Agents SDK and Amazon Bedrock incorporated | complete | The bounded Bedrock Haiku 4.5 trace completed on synthetic data in `eu-north-1` after a non-secret preflight. The fixed evidence → resolution → communications sequence produced no external action. |
-| Works consistently as depicted | complete for the synthetic demo | 49 automated tests pass, and the live VPS demo has verified HTTPS, health, token-gated routes, administrator access, and a SQLite integrity-checked backup. Record the final video against this source revision. |
-| Public repository with visible MIT/Apache license and README | complete | Anonymous GitHub lookup confirms the public repository, visible MIT license, and README. |
+| Works consistently as depicted | complete for the synthetic demo | Verified on 2026-09-03: the 49-case automated suite exited successfully, `uv build` succeeded with all dashboard assets, a fresh scheduled scan created one incident, and its backup passed SQLite integrity. The live VPS returned `200` for the public shell and health endpoint; anonymous incident access returned `401`. |
+| Public repository with visible MIT/Apache license and README | in progress | Anonymous GitHub lookup confirms the repository is public and visibly MIT-licensed with a README. Public `main` is still `89db9f8`; obtain explicit confirmation before pushing local commit `9dc6520` and the current verification update. |
 | Architecture diagram | complete | Mermaid diagram in `docs/Architecture.md`. |
 | English text description and testing instructions | complete | Copy-ready [Devpost submission text](DevpostSubmission.md), README, and demo script are in English. |
-| Public video, maximum five minutes | ready to record | `docs/DemoScript.md`; upload to public YouTube or Vimeo after final live-proof run. |
+| Public video, maximum five minutes | ready to record | `docs/DemoScript.md`; upload to public YouTube or Vimeo. Show the non-secret recorded Bedrock trace if available; a new paid invocation is only needed if you choose to make one and explicitly approve it. |
 | AWS Builder ID | not started | Add it on the Devpost submission form. |
+| Devpost form | not started | Complete the required English fields and submit before the deadline. |
 | Optional live demo link | complete | [`https://oec.connect-the-dots.biz`](https://oec.connect-the-dots.biz) serves the synthetic dashboard over HTTPS. Its operator/admin tokens are generated and held only on the VPS; do not publish them. |
 | Optional AWS Builder blog post | not started | Can cover the product journey after the submission is stable. |
 
 ## Before submitting
 
-1. Re-run `uv run pytest` and capture the result.
-2. Re-run the authorised, synthetic Strands-on-Bedrock smoke invocation and save
-   its non-secret preflight/trace evidence if the model, region, prompts, or source revision changed.
-3. Optionally run an AgentCore deployment dry-run, then seek explicit approval
-   before deploying it as a technical-score upgrade.
-4. Record the video using the script; keep it under five minutes and publish it.
-5. Verify anonymous access to the public README and MIT license after the final push.
-6. Complete Devpost fields in English, including the code URL, diagram, video,
+1. Obtain explicit confirmation before pushing the local submission/deployment documentation commits to public GitHub.
+2. After the push, verify anonymous access to the current README, MIT license, and submission materials.
+3. Record the video using the script; keep it under five minutes and publish it.
+4. Complete Devpost fields in English, including the code URL, diagram, video,
    Builder ID, and testing instructions.
+
+The live Bedrock trace has already been captured on synthetic data. Re-run the
+authorised smoke invocation only if its configuration or code changes, if its
+recorded evidence is unavailable for the video, or if you explicitly decide to
+create a fresh paid trace. AgentCore, staging-store validation, and the AWS
+Builder blog post are optional score or product follow-ons, not core submission
+blockers.
 
 The official rules require a new Strands project that does real work for real
 people, a public licensed repository, an architecture diagram, a public video,

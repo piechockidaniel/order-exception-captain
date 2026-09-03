@@ -1,4 +1,4 @@
-        # Order Exception Captain — editable delivery plan
+# Order Exception Captain — editable delivery plan
 
 **Status legend:** `complete` · `in progress` · `next` · `blocked` · `not started`
 
@@ -23,7 +23,7 @@ customer-message draft; and waits for a named human before any external action.
 | 4. Operator workflow | complete | Local dashboard passed a real browser approve/reject walkthrough, has PII minimisation/redaction, and includes a repeatable operator guide. |
 | 5. Safe integration | in progress | Browser-verified, approval-gated dry-run adapter generates one auditable handoff preview with no external write. The optional WooCommerce connector is separately bounded to HTTPS GET with server-side Read credentials and remains unconfigured in the demo. The Policy Builder stores immutable rule versions and requires a separate admin token. A real staging-store validation remains an explicit decision gate. |
 | 6. Production readiness | in progress | The synthetic demo is live at `https://oec.connect-the-dots.biz` behind HTTPS, a token-protected operator/admin boundary, OpenLiteSpeed, and a verified SQLite backup. 49 tests pass. Telemetry, retention owner, restore cadence, and a user-authorised staging validation still need operating decisions. |
-| 7. Submission evidence | in progress | The public GitHub repository has a MIT license and README; the architecture diagram, five-minute script, Devpost description, live demo link, checklist, and authorised live Strands proof are ready. Public video and Builder ID remain external submission steps. |
+| 7. Submission evidence | in progress | The GitHub repository is publicly readable and visibly MIT-licensed, but public `main` remains at `89db9f8`. Local commit `9dc6520` adds the live-demo, deployment, and operator material and needs explicit confirmation before it is pushed. The architecture diagram, five-minute script, Devpost description, live demo, and authorised live Strands proof are ready. The required external steps are the confirmed push, public video, Builder ID, and Devpost form. |
 
 ## Active slice — safe integration
 
@@ -55,9 +55,16 @@ customer-message draft; and waits for a named human before any external action.
 - [x] Produce a repository-native architecture diagram and five-minute demo script.
 - [x] Track every required submission item and distinguish finished evidence from external gates.
 - [x] Authorise and capture one live synthetic Strands-on-Bedrock trace with a selected model, region, and spend boundary. A non-secret preflight record and successful three-role trace were captured locally on 2026-08-30 UTC.
-- [ ] After that trace, decide whether an AgentCore deployment dry-run is justified as an optional technical-score upgrade; do not deploy without explicit approval.
+- [x] Re-verify the current official rules, public GitHub visibility and MIT license, current local test suite, wheel assets, scheduled-scan/backup path, and public live-demo access on 2026-09-03.
+- [ ] Obtain explicit action-time confirmation, then push the local submission/deployment documentation commits to public GitHub `main`.
 - [ ] Record and publish a public video that demonstrates the live dashboard and its synthetic workflow.
 - [ ] Register the final project with AWS Builder ID and submit before 2026-09-14 17:00 PDT.
+
+### Optional after the core submission
+
+- Decide whether an AgentCore deployment dry-run is justified as a technical-score upgrade; do not deploy without explicit approval.
+- Validate the WooCommerce source only against a user-authorised staging store with a Read-only key.
+- Select telemetry destination, retention owner, and restore-test cadence before connecting non-synthetic data.
 
 ### Acceptance criteria
 
@@ -86,7 +93,7 @@ customer-message draft; and waits for a named human before any external action.
 | AgentCore deployment expands the scope and AWS footprint. | First secure a successful local Bedrock trace. Treat AgentCore as a separately approved, optional score-strengthening deployment. |
 | A real-store integration creates customer or financial risk. | Start with a dry-run adapter and retain explicit approval as a hard gate. |
 | Scope overlaps Restock Room. | Do not add stock replenishment, supplier ordering, or purchasing. |
-| Submission repository is not publicly verifiable. | A GitHub remote exists, but anonymous lookup cannot verify its visibility. Confirm the intended repository and permission to publish before pushing this work or changing visibility. |
+| The public repository does not yet contain final submission material. | Anonymous lookup confirms `piechockidaniel/order-exception-captain` is public with a visible MIT license and README. Its public `main` is `89db9f8`; obtain action-time confirmation before pushing local commit `9dc6520` and this verification update. |
 
 ## API-funded development continuity
 

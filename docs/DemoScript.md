@@ -84,10 +84,11 @@ identity-aware proxy before real data.
 ## 4:35–5:00 — Strands, Bedrock, and honest close
 
 Show `strands_runtime.py` and the bounded evidence, resolution, and
-communications roles. Show the preflight record configured for Amazon Bedrock,
-then run the separately authorised synthetic live smoke test and include its
-visible trace in this segment. Do not represent the offline template runner as
-a live model invocation or imply that Bedrock selected a resolution.
+communications roles. Show the non-secret preflight record and recorded
+synthetic Bedrock trace. If that evidence is unavailable, or you elect to make
+a fresh paid call, obtain explicit approval before running the live smoke test.
+Do not represent the offline template runner as a live model invocation or
+imply that Bedrock selected a resolution.
 
 Close with: “Order Exception Captain narrows an ambiguous delivery problem into
 a repeatable, reviewable decision—without allowing an agent to silently send,
