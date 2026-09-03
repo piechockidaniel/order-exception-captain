@@ -23,7 +23,7 @@ customer-message draft; and waits for a named human before any external action.
 | 4. Operator workflow | complete | Local dashboard passed a real browser approve/reject walkthrough, has PII minimisation/redaction, and includes a repeatable operator guide. |
 | 5. Safe integration | in progress | Browser-verified, approval-gated dry-run adapter generates one auditable handoff preview with no external write. The optional WooCommerce connector is separately bounded to HTTPS GET with server-side Read credentials and remains unconfigured in the demo. The Policy Builder stores immutable rule versions and requires a separate admin token. A real staging-store validation remains an explicit decision gate. |
 | 6. Production readiness | in progress | The synthetic demo is live at `https://oec.connect-the-dots.biz` behind HTTPS, a token-protected operator/admin boundary, OpenLiteSpeed, and a verified SQLite backup. Release `3a24f88` was deployed and independently verified on 2026-09-03. Telemetry, retention owner, restore cadence, and a user-authorised staging validation still need operating decisions before non-synthetic data. |
-| 7. Submission evidence | in progress | Public GitHub `main` and the synthetic VPS demo both run the reviewed release `3a24f88`. The architecture diagram, five-minute script, Devpost description, live demo, and authorised live Strands proof are ready. The only required external steps are the public video, Builder ID, and Devpost form. |
+| 7. Submission evidence | in progress | Public GitHub `main` contains the reviewed runtime release `3a24f88` and its deployment record; the synthetic VPS is running `3a24f88`. The architecture diagram, five-minute script, Devpost description, live demo, and authorised live Strands proof are ready. The only required external steps are the public video, Builder ID, and Devpost form. |
 
 ## Active slice — safe integration
 
@@ -93,7 +93,7 @@ customer-message draft; and waits for a named human before any external action.
 | AgentCore deployment expands the scope and AWS footprint. | First secure a successful local Bedrock trace. Treat AgentCore as a separately approved, optional score-strengthening deployment. |
 | A real-store integration creates customer or financial risk. | Start with a dry-run adapter and retain explicit approval as a hard gate. |
 | Scope overlaps Restock Room. | Do not add stock replenishment, supplier ordering, or purchasing. |
-| Submission material or the live demo becomes stale before judging. | Public GitHub `main` and the live synthetic VPS release were both verified at `3a24f88` on 2026-09-03. Re-run the quick public checks after any later change and before Devpost submission. |
+| Submission material or the live demo becomes stale before judging. | Public GitHub `main` contains the reviewed runtime release `3a24f88`, and the live synthetic VPS runs that same release. Re-run the quick public checks after any later change and before Devpost submission. |
 
 ## API-funded development continuity
 
