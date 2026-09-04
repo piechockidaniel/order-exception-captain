@@ -1,6 +1,6 @@
 # Architecture
 
-![images/architectuer-diagram.png](images/architectuer-diagram.png)
+![architectuer-diagram.png](architectuer-diagram.png)
 
 The diagram is intentional: the deterministic coordinator controls branching,
 ordering, idempotency, and approval gates. Strands specialists may improve the
