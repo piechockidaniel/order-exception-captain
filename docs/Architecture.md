@@ -1,40 +1,6 @@
 # Architecture
 
-```mermaid
-flowchart TD
-    A[Read-only JSON snapshot, WooCommerce GET source, or manual scan] --> B{Deterministic delivery policy}
-    B -->|Normal order| C[No incident]
-    B -->|Stalled, lost, or failed delivery| D[Fixed specialist sequence]
-    D --> E[Evidence explanation]
-    E --> F[Resolution explanation]
-    F --> G[Customer-message draft]
-    G --> H[Approval-gated action draft]
-    H --> I{Named human decision}
-    I -->|Reject| J[Auditable local rejection]
-    I -->|Approve| K[Dry-run handoff only]
-    K --> L[No external request]
-    B --> M[(SQLite incidents and audit trail)]
-    I --> M
-    A --> N[Privacy-safe scan activity]
-    N --> M
-    Q[Administrator] --> R[Policy Builder]
-    R --> S[(Immutable policy versions)]
-    S --> B
-
-    subgraph Controlled AI assistance
-      D
-      E
-      F
-      G
-    end
-
-    subgraph Guardrails
-      O[Model cannot route, approve, or trigger a side effect]
-      P[Non-local access requires operator token]
-      T[Policy changes need separate admin token]
-      U[WooCommerce connector only uses HTTPS GET]
-    end
-```
+![images/architectuer-diagram.png](images/architectuer-diagram.png)
 
 The diagram is intentional: the deterministic coordinator controls branching,
 ordering, idempotency, and approval gates. Strands specialists may improve the
